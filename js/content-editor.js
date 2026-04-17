@@ -27,10 +27,18 @@ async function loadSiteContent() {
 // ===== SAVE CONTENT TO API =====
 async function saveSiteContent(content) {
     try {
+        // Get auth token from localStorage
+        const token = localStorage.getItem('authToken');
+        
+        if (!token) {
+            throw new Error('Not authenticated');
+        }
+        
         const response = await fetch('/api/content', {
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(content)
         });
