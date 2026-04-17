@@ -552,7 +552,20 @@
         "title": "Pridajte sa ku mne na najbližších stretnutiach",
         "description": "Skupinové lekcie, workshopy a wellness podujatia, ktoré sa blížia.",
         "cta": "Rezervovať",
-        "items": []
+        "items": [
+          {
+            "enabled": true,
+            "day": "25",
+            "month": "Juin",
+            "category": "Yoga",
+            "title": "Blavla",
+            "time": "12:56",
+            "location": "Online",
+            "description": "sdfsdfs",
+            "ctaLink": "#contact",
+            "ctaLabel": "Réserver"
+          }
+        ]
       },
       "gallery": {
         "tag": "Galéria",
