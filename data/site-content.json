@@ -554,7 +554,7 @@
         "cta": "Rezervovať",
         "items": [
           {
-            "enabled": true,
+            "enabled": false,
             "day": "25",
             "month": "Juin",
             "category": "Yoga",
