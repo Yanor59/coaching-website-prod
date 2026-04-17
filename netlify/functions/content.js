@@ -1,6 +1,8 @@
 // Content management with GitHub API integration
 // Reads content from deployed site, writes via GitHub API
 
+const https = require('https');
+
 // Helper to verify JWT token
 function verifyAuth(headers) {
   const authHeader = headers.authorization || headers.Authorization;
@@ -13,6 +15,26 @@ function verifyAuth(headers) {
   return token === expectedToken;
 }
 
+// Helper to make HTTPS requests
+function httpsRequest(url, options = {}) {
+  return new Promise((resolve, reject) => {
+    const req = https.request(url, options, (res) => {
+      let data = '';
+      res.on('data', (chunk) => data += chunk);
+      res.on('end', () => {
+        if (res.statusCode >= 200 && res.statusCode < 300) {
+          resolve({ statusCode: res.statusCode, data });
+        } else {
+          reject(new Error(`HTTP ${res.statusCode}: ${data}`));
+        }
+      });
+    });
+    req.on('error', reject);
+    if (options.body) req.write(options.body);
+    req.end();
+  });
+}
+
 // GET - Read content from deployed site
 async function getContent(event) {
   try {
@@ -23,13 +45,7 @@ async function getContent(event) {
     console.log('📖 Fetching content from:', contentUrl);
     
     // Fetch the content file from the deployed site
-    const response = await fetch(contentUrl);
-    
-    if (!response.ok) {
-      throw new Error(`Failed to fetch content: ${response.status}`);
-    }
-    
-    const data = await response.text();
+    const response = await httpsRequest(contentUrl);
     console.log('✅ Content loaded successfully');
     
     return {
@@ -38,7 +54,7 @@ async function getContent(event) {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*'
       },
-      body: data
+      body: response.data
     };
   } catch (error) {
     console.error('❌ Error reading content:', error);
@@ -48,9 +64,9 @@ async function getContent(event) {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*'
       },
-      body: JSON.stringify({ 
+      body: JSON.stringify({
         error: 'Failed to read content',
-        message: error.message 
+        message: error.message
       })
     };
   }
@@ -112,7 +128,8 @@ async function updateContent(body, headers) {
     console.log('📝 Updating content via GitHub API:', apiUrl);
 
     // Step 1: Get current file SHA (required for update)
-    const getResponse = await fetch(apiUrl, {
+    const getResponse = await httpsRequest(apiUrl, {
+      method: 'GET',
       headers: {
         'Authorization': `token ${githubToken}`,
         'Accept': 'application/vnd.github.v3+json',
@@ -120,38 +137,32 @@ async function updateContent(body, headers) {
       }
     });
 
-    if (!getResponse.ok) {
-      throw new Error(`Failed to get file SHA: ${getResponse.status} ${getResponse.statusText}`);
-    }
-
-    const fileData = await getResponse.json();
+    const fileData = JSON.parse(getResponse.data);
     const currentSha = fileData.sha;
 
     // Step 2: Update file with new content
     const contentBase64 = Buffer.from(JSON.stringify(content, null, 2)).toString('base64');
     
-    const updateResponse = await fetch(apiUrl, {
+    const updateBody = JSON.stringify({
+      message: 'Update content via admin interface',
+      content: contentBase64,
+      sha: currentSha,
+      branch: 'main'
+    });
+
+    const updateResponse = await httpsRequest(apiUrl, {
       method: 'PUT',
       headers: {
         'Authorization': `token ${githubToken}`,
         'Accept': 'application/vnd.github.v3+json',
         'Content-Type': 'application/json',
-        'User-Agent': 'Netlify-Function'
+        'User-Agent': 'Netlify-Function',
+        'Content-Length': Buffer.byteLength(updateBody)
       },
-      body: JSON.stringify({
-        message: 'Update content via admin interface',
-        content: contentBase64,
-        sha: currentSha,
-        branch: 'main'
-      })
+      body: updateBody
     });
 
-    if (!updateResponse.ok) {
-      const errorData = await updateResponse.json();
-      throw new Error(`GitHub API error: ${updateResponse.status} - ${errorData.message}`);
-    }
-
-    const updateData = await updateResponse.json();
+    const updateData = JSON.parse(updateResponse.data);
     console.log('✅ Content updated successfully:', updateData.commit.sha);
 
     return {
