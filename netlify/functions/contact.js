@@ -23,11 +23,17 @@ function escapeHtml(value) {
 }
 
 exports.handler = async (event) => {
+  console.log('📨 contact function invoked', {
+    method: event.httpMethod,
+    hasBody: !!event.body
+  });
+
   if (event.httpMethod === 'OPTIONS') {
     return json(200, {});
   }
 
   if (event.httpMethod !== 'POST') {
+    console.log('❌ Invalid method for contact function:', event.httpMethod);
     return json(405, { error: 'Method not allowed' });
   }
 
@@ -36,7 +42,16 @@ exports.handler = async (event) => {
     const toEmail = process.env.CONTACT_TO_EMAIL;
     const fromEmail = process.env.CONTACT_FROM_EMAIL;
 
+    console.log('🔧 contact env check', {
+      hasResendApiKey: !!resendApiKey,
+      hasToEmail: !!toEmail,
+      hasFromEmail: !!fromEmail,
+      fromEmailPreview: fromEmail || null,
+      toEmailPreview: toEmail || null
+    });
+
     if (!resendApiKey || !toEmail || !fromEmail) {
+      console.error('❌ Missing contact env vars');
       return json(500, {
         error: 'Email service not configured. Missing RESEND_API_KEY, CONTACT_TO_EMAIL or CONTACT_FROM_EMAIL.'
       });
@@ -52,12 +67,23 @@ exports.handler = async (event) => {
     const message = String(payload.message || '').trim();
     const language = String(payload.language || 'fr').trim();
 
+    console.log('📝 contact payload parsed', {
+      name,
+      email,
+      hasPhone: !!phone,
+      service,
+      language,
+      messageLength: message.length
+    });
+
     if (!name || !email || !message) {
+      console.error('❌ Missing required contact fields');
       return json(400, { error: 'Missing required fields.' });
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
+      console.error('❌ Invalid sender email:', email);
       return json(400, { error: 'Invalid email address.' });
     }
 
@@ -76,6 +102,7 @@ exports.handler = async (event) => {
 
     const subject = `Nouveau message site web - ${name}`;
 
+    console.log('🚀 Sending email with Resend...');
     const { data, error } = await resend.emails.send({
       from: fromEmail,
       to: [toEmail],
@@ -106,9 +133,13 @@ exports.handler = async (event) => {
     });
 
     if (error) {
-      console.error('Resend API error:', error);
+      console.error('❌ Resend API error:', JSON.stringify(error, null, 2));
       return json(502, { error: 'Email provider error.' });
     }
+
+    console.log('✅ Email sent successfully via Resend', {
+      id: data ? data.id : null
+    });
 
     return json(200, {
       success: true,
@@ -116,7 +147,7 @@ exports.handler = async (event) => {
       id: data ? data.id : null
     });
   } catch (error) {
-    console.error('Contact function error:', error);
+    console.error('❌ Contact function error:', error);
     return json(500, {
       error: 'Failed to send email.',
       details: error.message
