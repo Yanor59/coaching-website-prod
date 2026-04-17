@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Alina Coaching Bratislava</title>
+    <link rel="stylesheet" href="css/admin-styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="admin-body">
+    <!-- Language Selector -->
+    <div class="admin-language-selector">
+        <button class="admin-lang-btn active" data-lang="fr">🇫🇷 FR</button>
+        <button class="admin-lang-btn" data-lang="ua">🇺🇦 UA</button>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+        <div class="sidebar-header">
+            <h2 data-i18n="sidebar.title">🏋️‍♀️ Alina Admin</h2>
+            <button class="sidebar-toggle" aria-label="Toggle sidebar">☰</button>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <a href="#dashboard" class="nav-item active">
+                <span class="nav-icon">📊</span>
+                <span class="nav-text" data-i18n="sidebar.dashboard">Dashboard</span>
+            </a>
+            <a href="#content" class="nav-item">
+                <span class="nav-icon">📝</span>
+                <span class="nav-text" data-i18n="sidebar.content">Contenu</span>
+            </a>
+            <a href="#events" class="nav-item">
+                <span class="nav-icon">📅</span>
+                <span class="nav-text" data-i18n="sidebar.events">Événements</span>
+            </a>
+            <a href="#partners" class="nav-item">
+                <span class="nav-icon">🤝</span>
+                <span class="nav-text" data-i18n="sidebar.partners">Partenariats</span>
+            </a>
+            <a href="#pricing" class="nav-item">
+                <span class="nav-icon">💰</span>
+                <span class="nav-text" data-i18n="sidebar.pricing">Tarifs</span>
+            </a>
+            <a href="#testimonials" class="nav-item">
+                <span class="nav-icon">💬</span>
+                <span class="nav-text" data-i18n="sidebar.testimonials">Témoignages</span>
+            </a>
+            <a href="#media" class="nav-item">
+                <span class="nav-icon">🖼️</span>
+                <span class="nav-text" data-i18n="sidebar.media">Médias</span>
+            </a>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-avatar">A</div>
+                <div class="user-details">
+                    <div class="user-name">Alina</div>
+                    <div class="user-role" data-i18n="sidebar.userRole">Administration locale</div>
+                </div>
+            </div>
+            <button onclick="logout()" class="btn-logout" title="Déconnexion">
+                🚪 Déconnexion
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+        <!-- Top Bar -->
+        <header class="admin-header">
+            <div class="header-left">
+                <h1 class="page-title" data-i18n="header.title">Administration du site</h1>
+                <p class="page-subtitle" data-i18n="header.subtitle">Modifiez le contenu public et les médias réellement utilisés sur le site.</p>
+            </div>
+            <div class="header-right">
+                <a href="index.html" class="btn-view-site" target="_blank" data-i18n="header.viewSite">
+                    👁️ Voir le site
+                </a>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <div class="admin-content">
+            <div class="section-card admin-focus-card">
+                <h2 class="section-title" data-i18n="dashboard.usefulActions">Actions utiles</h2>
+                <p class="admin-focus-text" data-i18n="dashboard.focusText">
+                    Cette interface a été simplifiée pour ne garder que les éléments réellement connectés au site.
+                    Utilisez les boutons ci-dessous pour modifier le contenu, gérer les médias et mettre à jour les événements.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Example (Upload) -->
+    <div class="modal" id="uploadModal" style="display: none;">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 data-i18n="modal.addMedia">Ajouter des Médias</h3>
+                <button class="modal-close" data-i18n="modal.close">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="upload-area">
+                    <div class="upload-icon">📤</div>
+                    <p data-i18n="modal.dragDrop">Glissez-déposez vos fichiers ici</p>
+                    <p class="upload-hint" data-i18n="modal.orClick">ou cliquez pour sélectionner</p>
+                    <input type="file" multiple accept="image/*,video/*" style="display: none;">
+                    <button class="btn-primary" data-i18n="modal.chooseFiles">Choisir des fichiers</button>
+                </div>
+                <div class="upload-info">
+                    <p data-i18n="modal.acceptedFormats">Formats acceptés: JPG, PNG, WebP, MP4</p>
+                    <p data-i18n="modal.maxSize">Taille max: 5 MB par fichier</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Authentication check -->
+    <script>
+        // Check authentication before loading admin
+        async function checkAuthentication() {
+            try {
+                const response = await fetch('/api/check-auth');
+                const data = await response.json();
+                
+                if (!data.authenticated) {
+                    // Redirect to login if not authenticated
+                    window.location.href = '/login.html';
+                    return false;
+                }
+                
+                return true;
+            } catch (error) {
+                console.error('Auth check failed:', error);
+                window.location.href = '/login.html';
+                return false;
+            }
+        }
+        
+        // Check auth immediately
+        checkAuthentication().then(authenticated => {
+            if (authenticated) {
+                // Load admin scripts only if authenticated
+                // Load them sequentially to ensure proper initialization order
+                const scripts = [
+                    'js/admin-i18n.js',
+                    'js/auto-translate.js',
+                    'js/admin.js',
+                    'js/content-editor.js',
+                    'js/events-manager.js',
+                    'js/partners-manager.js',
+                    'js/pricing-manager.js',
+                    'js/testimonials-manager.js',
+                    'js/image-upload.js'
+                ];
+                
+                // Load scripts sequentially to maintain order
+                function loadScriptSequentially(index) {
+                    if (index >= scripts.length) {
+                        console.log('✅ All admin scripts loaded');
+                        return;
+                    }
+                    
+                    const script = document.createElement('script');
+                    script.src = scripts[index];
+                    script.onload = () => {
+                        console.log(`✅ Loaded: ${scripts[index]}`);
+                        loadScriptSequentially(index + 1);
+                    };
+                    script.onerror = () => {
+                        console.error(`❌ Failed to load: ${scripts[index]}`);
+                        loadScriptSequentially(index + 1);
+                    };
+                    document.body.appendChild(script);
+                }
+                
+                loadScriptSequentially(0);
+            }
+        });
+        
+        // Add logout functionality
+        function logout() {
+            fetch('/api/logout', { method: 'POST' })
+                .then(() => {
+                    window.location.href = '/login.html';
+                })
+                .catch(error => {
+                    console.error('Logout error:', error);
+                    window.location.href = '/login.html';
+                });
+        }
+    </script>
+</body>
+</html>

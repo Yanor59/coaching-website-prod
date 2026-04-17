@@ -1,0 +1,14 @@
+{
+  "name": "coaching-website-local-admin",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local JSON persistence for coaching website admin",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.20.0",
+    "dotenv": "^16.4.5"
+  }
+}

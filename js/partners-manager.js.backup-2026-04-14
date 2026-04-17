@@ -1,0 +1,387 @@
+// ===== PARTNERS MANAGER =====
+// Gestion des partenariats avec CRUD complet
+
+let partnersData = null;
+const MAX_PARTNERS = 10;
+
+// ===== RENDER PARTNERS MANAGER =====
+function renderPartnersManager() {
+    const mainContent = document.querySelector('.admin-content');
+    if (!mainContent || !siteContent) {
+        console.error('Cannot render partners manager');
+        return;
+    }
+    
+    const t = (key) => typeof adminI18n !== 'undefined' ? adminI18n.t(key) : key;
+    
+    // Get partners data for all languages
+    partnersData = {
+        fr: siteContent.content.fr.partners || { items: [] },
+        en: siteContent.content.en.partners || { items: [] },
+        sk: siteContent.content.sk.partners || { items: [] },
+        ua: siteContent.content.ua.partners || { items: [] }
+    };
+    
+    const partners = partnersData.fr.items || [];
+    const canAddMore = partners.length < MAX_PARTNERS;
+    
+    mainContent.innerHTML = `
+        <div class="partners-manager-container">
+            <div class="manager-header">
+                <h2>🤝 ${t('partnersManager.title')}</h2>
+                <p>${t('partnersManager.subtitle')}</p>
+                <p class="partner-count">${partners.length} / ${MAX_PARTNERS} partenaires</p>
+            </div>
+            
+            ${canAddMore ? `
+                <button id="add-partner-btn" class="btn-primary">
+                    ➕ ${t('partnersManager.addPartner')}
+                </button>
+            ` : `
+                <div class="alert alert-warning">
+                    ⚠️ Limite de ${MAX_PARTNERS} partenaires atteinte
+                </div>
+            `}
+            
+            <div id="partners-list" class="partners-list">
+                ${partners.length === 0 ? `
+                    <div class="empty-state">
+                        <p>🤝 ${t('partnersManager.noPartners')}</p>
+                        <p>${t('partnersManager.noPartnersDesc')}</p>
+                    </div>
+                ` : renderPartnersList(partners)}
+            </div>
+        </div>
+        
+        <!-- Modal for add/edit partner -->
+        <div id="partner-modal" class="modal">
+            <div class="modal-content">
+                <span class="modal-close">&times;</span>
+                <h3 id="modal-title">${t('partnersManager.addPartner')}</h3>
+                <form id="partner-form">
+                    <input type="hidden" id="partner-index" value="-1">
+                    
+                    <div class="form-group">
+                        <label data-i18n="partnersManager.form.name">${t('partnersManager.form.name')} *</label>
+                        <input type="text" id="partner-name" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label data-i18n="partnersManager.form.specialty">${t('partnersManager.form.specialty')} *</label>
+                        <input type="text" id="partner-specialty" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label data-i18n="partnersManager.form.website">${t('partnersManager.form.website')}</label>
+                        <input type="url" id="partner-website" class="form-control" placeholder="https://...">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label data-i18n="partnersManager.form.image">${t('partnersManager.form.image')}</label>
+                        <input type="text" id="partner-image" class="form-control" placeholder="images/partner.jpg">
+                        <small>Chemin vers l'image ou laissez vide</small>
+                    </div>
+                    
+                    <div class="language-tabs">
+                        <button type="button" class="lang-tab active" data-lang="fr">🇫🇷 FR</button>
+                        <button type="button" class="lang-tab" data-lang="en">🇬🇧 EN</button>
+                        <button type="button" class="lang-tab" data-lang="sk">🇸🇰 SK</button>
+                        <button type="button" class="lang-tab" data-lang="ua">🇺🇦 UA</button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label id="desc-label-fr" data-i18n="partnersManager.form.description">${t('partnersManager.form.description')} (FR) *</label>
+                        <textarea id="partner-desc-fr" class="form-control" rows="3" required></textarea>
+                        
+                        <label id="desc-label-en" data-i18n="partnersManager.form.description" style="display:none">${t('partnersManager.form.description')} (EN) *</label>
+                        <textarea id="partner-desc-en" class="form-control" rows="3" style="display:none"></textarea>
+                        
+                        <label id="desc-label-sk" data-i18n="partnersManager.form.description" style="display:none">${t('partnersManager.form.description')} (SK) *</label>
+                        <textarea id="partner-desc-sk" class="form-control" rows="3" style="display:none"></textarea>
+                        
+                        <label id="desc-label-ua" data-i18n="partnersManager.form.description" style="display:none">${t('partnersManager.form.description')} (UA) *</label>
+                        <textarea id="partner-desc-ua" class="form-control" rows="3" style="display:none"></textarea>
+                    </div>
+                    
+                    <div class="modal-actions">
+                        <button type="button" class="btn-secondary" id="cancel-partner-btn" data-i18n="common.cancel">
+                            ${t('common.cancel')}
+                        </button>
+                        <button type="submit" class="btn-primary" data-i18n="common.save">
+                            💾 ${t('common.save')}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    `;
+    
+    bindPartnersEvents();
+    
+    // Refresh translations after rendering with a delay
+    setTimeout(() => {
+        if (typeof window.refreshAdminTranslations === 'function') {
+            window.refreshAdminTranslations();
+        }
+    }, 200);
+}
+
+// ===== RENDER PARTNERS LIST =====
+function renderPartnersList(partners) {
+    const t = (key) => typeof adminI18n !== 'undefined' ? adminI18n.t(key) : key;
+    
+    return partners.map((partner, index) => `
+        <div class="partner-card" data-index="${index}">
+            <div class="partner-info">
+                ${partner.image ? `
+                    <img src="${partner.image}" alt="${partner.name}" class="partner-image">
+                ` : `
+                    <div class="partner-placeholder">👤</div>
+                `}
+                <div class="partner-details">
+                    <h4>${partner.name}</h4>
+                    <p class="partner-specialty">${partner.specialty}</p>
+                    <p class="partner-description">${partner.description.substring(0, 100)}...</p>
+                    ${partner.website ? `<a href="${partner.website}" target="_blank">🔗 Site web</a>` : ''}
+                </div>
+            </div>
+            <div class="partner-actions">
+                <button class="btn-icon btn-move-up" data-index="${index}" ${index === 0 ? 'disabled' : ''} title="${t('common.moveUp')}">
+                    ↑
+                </button>
+                <button class="btn-icon btn-move-down" data-index="${index}" ${index === partners.length - 1 ? 'disabled' : ''} title="${t('common.moveDown')}">
+                    ↓
+                </button>
+                <button class="btn-icon btn-edit" data-index="${index}" title="${t('common.edit')}">
+                    ✏️
+                </button>
+                <button class="btn-icon btn-delete" data-index="${index}" title="${t('common.delete')}">
+                    🗑️
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+// ===== BIND EVENTS =====
+function bindPartnersEvents() {
+    const addBtn = document.getElementById('add-partner-btn');
+    const modal = document.getElementById('partner-modal');
+    const closeBtn = modal?.querySelector('.modal-close');
+    const cancelBtn = document.getElementById('cancel-partner-btn');
+    const form = document.getElementById('partner-form');
+    const langTabs = document.querySelectorAll('.lang-tab');
+    
+    // Add partner
+    if (addBtn) {
+        addBtn.addEventListener('click', () => openPartnerModal());
+    }
+    
+    // Close modal
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => closePartnerModal());
+    }
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', () => closePartnerModal());
+    }
+    
+    // Language tabs
+    langTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const lang = tab.dataset.lang;
+            switchDescriptionLanguage(lang);
+            langTabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+        });
+    });
+    
+    // Form submit
+    if (form) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            savePartner();
+        });
+    }
+    
+    // Edit, Delete, Move buttons
+    document.querySelectorAll('.btn-edit').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const index = parseInt(btn.dataset.index);
+            openPartnerModal(index);
+        });
+    });
+    
+    document.querySelectorAll('.btn-delete').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const index = parseInt(btn.dataset.index);
+            deletePartner(index);
+        });
+    });
+    
+    document.querySelectorAll('.btn-move-up').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const index = parseInt(btn.dataset.index);
+            movePartner(index, -1);
+        });
+    });
+    
+    document.querySelectorAll('.btn-move-down').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const index = parseInt(btn.dataset.index);
+            movePartner(index, 1);
+        });
+    });
+}
+
+// ===== OPEN MODAL =====
+function openPartnerModal(index = -1) {
+    const modal = document.getElementById('partner-modal');
+    const form = document.getElementById('partner-form');
+    const t = (key) => typeof adminI18n !== 'undefined' ? adminI18n.t(key) : key;
+    
+    // Reset form
+    form.reset();
+    document.getElementById('partner-index').value = index;
+    
+    if (index >= 0) {
+        // Edit mode
+        const partner = partnersData.fr.items[index];
+        document.getElementById('modal-title').textContent = t('partnersManager.editPartner');
+        document.getElementById('partner-name').value = partner.name;
+        document.getElementById('partner-specialty').value = partner.specialty;
+        document.getElementById('partner-website').value = partner.website || '';
+        document.getElementById('partner-image').value = partner.image || '';
+        
+        // Load descriptions for all languages
+        ['fr', 'en', 'sk', 'ua'].forEach(lang => {
+            const partnerLang = partnersData[lang].items[index];
+            document.getElementById(`partner-desc-${lang}`).value = partnerLang.description;
+        });
+    } else {
+        // Add mode
+        document.getElementById('modal-title').textContent = t('partnersManager.addPartner');
+    }
+    
+    modal.style.display = 'block';
+}
+
+// ===== CLOSE MODAL =====
+function closePartnerModal() {
+    const modal = document.getElementById('partner-modal');
+    modal.style.display = 'none';
+}
+
+// ===== SWITCH DESCRIPTION LANGUAGE =====
+function switchDescriptionLanguage(lang) {
+    ['fr', 'en', 'sk', 'ua'].forEach(l => {
+        const label = document.getElementById(`desc-label-${l}`);
+        const textarea = document.getElementById(`partner-desc-${l}`);
+        if (l === lang) {
+            label.style.display = 'block';
+            textarea.style.display = 'block';
+        } else {
+            label.style.display = 'none';
+            textarea.style.display = 'none';
+        }
+    });
+}
+
+// ===== SAVE PARTNER =====
+async function savePartner() {
+    const index = parseInt(document.getElementById('partner-index').value);
+    const t = (key) => typeof adminI18n !== 'undefined' ? adminI18n.t(key) : key;
+    
+    const partnerData = {
+        name: document.getElementById('partner-name').value.trim(),
+        specialty: document.getElementById('partner-specialty').value.trim(),
+        website: document.getElementById('partner-website').value.trim(),
+        image: document.getElementById('partner-image').value.trim()
+    };
+    
+    // Save for all languages
+    ['fr', 'en', 'sk', 'ua'].forEach(lang => {
+        const description = document.getElementById(`partner-desc-${lang}`).value.trim();
+        
+        const partner = {
+            ...partnerData,
+            description
+        };
+        
+        if (index >= 0) {
+            // Edit existing
+            partnersData[lang].items[index] = partner;
+        } else {
+            // Add new
+            partnersData[lang].items.push(partner);
+        }
+        
+        // Update site content
+        siteContent.content[lang].partners = partnersData[lang];
+    });
+    
+    // Save to server
+    await saveSiteContent(siteContent);
+    
+    // Close modal and refresh
+    closePartnerModal();
+    renderPartnersManager();
+    
+    if (typeof showNotification === 'function') {
+        showNotification(t('notifications.contentSaved'), 'success');
+    }
+}
+
+// ===== DELETE PARTNER =====
+async function deletePartner(index) {
+    const t = (key) => typeof adminI18n !== 'undefined' ? adminI18n.t(key) : key;
+    const partner = partnersData.fr.items[index];
+    
+    if (!confirm(`${t('partnersManager.confirmDelete')} "${partner.name}" ?`)) {
+        return;
+    }
+    
+    // Delete from all languages
+    ['fr', 'en', 'sk', 'ua'].forEach(lang => {
+        partnersData[lang].items.splice(index, 1);
+        siteContent.content[lang].partners = partnersData[lang];
+    });
+    
+    // Save to server
+    await saveSiteContent(siteContent);
+    
+    // Refresh
+    renderPartnersManager();
+    
+    if (typeof showNotification === 'function') {
+        showNotification(t('notifications.partnerDeleted'), 'success');
+    }
+}
+
+// ===== MOVE PARTNER =====
+async function movePartner(index, direction) {
+    const newIndex = index + direction;
+    const t = (key) => typeof adminI18n !== 'undefined' ? adminI18n.t(key) : key;
+    
+    if (newIndex < 0 || newIndex >= partnersData.fr.items.length) {
+        return;
+    }
+    
+    // Move in all languages
+    ['fr', 'en', 'sk', 'ua'].forEach(lang => {
+        const items = partnersData[lang].items;
+        [items[index], items[newIndex]] = [items[newIndex], items[index]];
+        siteContent.content[lang].partners = partnersData[lang];
+    });
+    
+    // Save to server
+    await saveSiteContent(siteContent);
+    
+    // Refresh
+    renderPartnersManager();
+    
+    if (typeof showNotification === 'function') {
+        showNotification(t('notifications.orderUpdated'), 'success');
+    }
+}
+
+// Made with Bob

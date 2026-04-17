@@ -1,0 +1,938 @@
+{
+  "site": {
+    "name": "Alina Coaching",
+    "location": "Bratislava"
+  },
+  "languages": [
+    "fr",
+    "en",
+    "sk",
+    "ua"
+  ],
+  "content": {
+    "fr": {
+      "nav": {
+        "home": "Accueil",
+        "about": "À propos",
+        "services": "Services",
+        "events": "Événements",
+        "gallery": "Galerie",
+        "testimonials": "Témoignages",
+        "pricing": "Tarifs",
+        "contact": "Contact"
+      },
+      "hero": {
+        "title": "Révélez Votre Potentiel avec la Coach Alina",
+        "subtitle": "Coaching fitness personnalisé pour femmes à Bratislava ou en Ligne",
+        "description": "Transformez votre corps et votre esprit avec un accompagnement bienveillant et professionnel",
+        "cta": "Réserver une séance",
+        "discover": "Découvrir mes services",
+        "scroll": "Défiler"
+      },
+      "about": {
+        "tag": "Qui suis-je",
+        "title": "À Propos d'Alina",
+        "subtitle": "Coach Fitness ",
+        "experience": "Années d'expérience",
+        "experienceValue": "2+",
+        "bio1": "Passionnée par le fitness et le bien-être, j'accompagne les femmes dans leur transformation physique et mentale depuis plusieurs années :)",
+        "bio2": "Ma philosophie repose sur une approche holistique : exercices adaptés, nutrition équilibrée et mindset positif. Chaque programme est personnalisé selon vos objectifs et votre rythme. n'hésitez pas à me contacter",
+        "cert1": "Certifiée Personal Trainer",
+        "cert2": "",
+        "cert3": "",
+        "image": {
+          "src": "images/1776170707173-images.jpg",
+          "alt": "Photo d'Alina",
+          "placeholder": "Photo d'Alina"
+        }
+      },
+      "services": {
+        "tag": "Mes Services",
+        "title": "Programmes de Coaching",
+        "description": "Des programmes adaptés à vos besoins et objectifs",
+        "popular": "Populaire",
+        "learn": "En savoir plus →",
+        "individual": {
+          "title": "Coaching Individuel",
+          "desc": "Accompagnement personnalisé en présentiel ou en ligne.",
+          "feat1": "Programme sur mesure",
+          "feat2": "Suivi personnalisé",
+          "feat3": "Flexibilité horaires"
+        },
+        "group": {
+          "title": "Séances en Groupe",
+          "desc": "Entraînements dynamiques en petit groupe (max 6 personnes).",
+          "feat1": "Ambiance motivante",
+          "feat2": "Tarif avantageux",
+          "feat3": "Créer des liens"
+        },
+        "online": {
+          "title": "Programmes en Ligne",
+          "desc": "Entraînez-vous où vous voulez, quand vous voulez avec des conseils vidéos",
+          "feat1": "Accès 24/7",
+          "feat2": "Vidéos détaillées",
+          "feat3": "Support continu"
+        }
+      },
+      "events": {
+        "tag": "Prochains événements",
+        "title": "Retrouvez-moi lors des prochains rendez-vous",
+        "description": "Séances collectives, ateliers et événements bien-être à venir.",
+        "cta": "Réserver",
+        "items": []
+      },
+      "gallery": {
+        "tag": "Galerie",
+        "title": "Exemples & Vidéos",
+        "description": "Découvrez mes entraînements et transformations",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=DiYTaQ-Mgck",
+            "title": "post1"
+          }
+        ],
+        "photos": [
+          {
+            "url": "images/1776170803620-images.jpg",
+            "caption": "photo1"
+          },
+          {
+            "url": "images/1234.jpg",
+            "caption": "photo2"
+          }
+        ]
+      },
+      "partners": {
+        "tag": "Partenariats",
+        "title": "Mes Partenaires",
+        "description": "Je collabore avec d'excellents professionnels",
+        "items": [
+          {
+            "name": "yaya",
+            "specialty": "food specialist",
+            "website": "",
+            "image": "",
+            "description": "food specialist"
+          },
+          {
+            "name": "CECE",
+            "specialty": "CASSE TOUT",
+            "website": "",
+            "image": "",
+            "description": "ok"
+          }
+        ]
+      },
+      "testimonials": {
+        "tag": "Témoignages",
+        "title": "Ce Que Disent Mes Clientes",
+        "clientLabel": "Cliente depuis",
+        "items": [
+          {
+            "name": "Marie D.",
+            "duration": "6 mois",
+            "rating": 5,
+            "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Alina est une coach exceptionnelle qui m'a aidée à atteindre mes objectifs. Je me sens plus forte et confiante!",
+            "image": "",
+            "status": "pending"
+          },
+          {
+            "name": "Sophie L.",
+            "duration": "1 an",
+            "rating": 5,
+            "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Programme parfaitement adapté à mes besoins. Les résultats sont visibles et je me sens en pleine forme!",
+            "image": ""
+          },
+          {
+            "name": "Anna K.",
+            "duration": "3 mois",
+            "rating": 5,
+            "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Approche bienveillante et professionnelle. Je recommande vivement Alina à toutes les femmes!",
+            "image": ""
+          }
+        ]
+      },
+      "pricing": {
+        "tag": "Tarifs",
+        "title": "Choisissez Votre Formule",
+        "description": "Des tarifs adaptés à tous les budgets",
+        "popular": "Populaire",
+        "session": "/ séance",
+        "month": "/ mois",
+        "book": "Réserver",
+        "plans": [
+          {
+            "name": "Découverte",
+            "price": "€45",
+            "period": "/ séance",
+            "featured": false,
+            "features": [
+              "1 séance individuelle",
+              "Évaluation complète",
+              "Programme personnalisé",
+              "Conseils nutrition"
+            ]
+          },
+          {
+            "name": "Premium",
+            "price": "€160",
+            "period": "/ mois",
+            "featured": true,
+            "features": [
+              "4 séances / mois",
+              "Suivi personnalisé",
+              "Plan nutrition détaillé",
+              "Support WhatsApp",
+              "Accès vidéos exclusives"
+            ]
+          },
+          {
+            "name": "VIP",
+            "price": "€280",
+            "period": "/ mois",
+            "featured": false,
+            "features": [
+              "8 séances / mois",
+              "Suivi quotidien",
+              "Nutrition + suppléments",
+              "Support 24/7",
+              "Accès tous programmes",
+              "Séances partenaires"
+            ]
+          }
+        ]
+      },
+      "contact": {
+        "tag": "Contact",
+        "title": "Commencez Votre Transformation",
+        "description": "Contactez-moi pour une première séance découverte",
+        "location": "Localisation",
+        "locationValue": "Bratislava, Slovaquie",
+        "email": "Email",
+        "emailValue": "yannickleroy@gmail.com",
+        "phone": "Test",
+        "phoneValue": "XXXXXX",
+        "hours": "Horaires",
+        "schedule": "Lun-Ven: 7h-20h Sam: 9h-14h",
+        "form": {
+          "name": "Nom *",
+          "email": "Email *",
+          "phone": "Téléphone",
+          "service": "Service souhaité",
+          "select": "Sélectionnez...",
+          "individual": "Coaching individuel",
+          "group": "Séances en groupe",
+          "online": "Programme en ligne",
+          "message": "Message *",
+          "send": "Envoyer le message"
+        }
+      },
+      "footer": {
+        "tagline": "Votre partenaire fitness à Bratislava",
+        "quick": "Liens Rapides",
+        "legal": "Légal",
+        "privacy": "Politique de confidentialité",
+        "terms": "Conditions d'utilisation",
+        "cookies": "Cookies",
+        "newsletter": "Newsletter",
+        "subscribe": "Recevez mes conseils fitness",
+        "email": "Votre email",
+        "join": "S'inscrire",
+        "rights": "Tous droits réservés."
+      }
+    },
+    "en": {
+      "nav": {
+        "home": "Home",
+        "about": "About",
+        "services": "Services",
+        "events": "Events",
+        "gallery": "Gallery",
+        "testimonials": "Testimonials",
+        "pricing": "Pricing",
+        "contact": "Contact"
+      },
+      "hero": {
+        "title": "Reveal Your Potential",
+        "subtitle": "[English] Coaching fitness personnalisé pour femmes à Bratislava",
+        "description": "[English] Transformez votre corps et votre esprit avec un accompagnement bienveillant et professionnel",
+        "cta": "Book a session",
+        "discover": "[English] Découvrir mes services",
+        "scroll": "[English] Défiler"
+      },
+      "about": {
+        "tag": "Who I am",
+        "title": "About Alina",
+        "subtitle": "Certified Fitness Coach",
+        "experience": "Years of experience",
+        "experienceValue": "5+",
+        "bio1": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Passionate about fitness and wellness, I have been supporting women in their physical and mental transformation for over 5 years.",
+        "bio2": "My philosophy is based on a holistic approach: adapted exercises, balanced nutrition and positive mindset. Each program is personalized according to your goals and pace.",
+        "cert1": "Certified Personal Trainer",
+        "cert2": "Nutrition Specialist",
+        "cert3": "Wellness Coach",
+        "image": {
+          "src": "",
+          "alt": "Photo of Alina",
+          "placeholder": "Photo of Alina"
+        }
+      },
+      "services": {
+        "tag": "My Services",
+        "title": "Coaching Programs",
+        "description": "Programs adapted to your needs and goals",
+        "popular": "Popular",
+        "learn": "Learn more →",
+        "individual": {
+          "title": "Individual Coaching",
+          "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Personalized support in person or online.",
+          "feat1": "Customized program",
+          "feat2": "Personal follow-up",
+          "feat3": "Flexible schedule"
+        },
+        "group": {
+          "title": "Group Sessions",
+          "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Dynamic training in small groups (max 6 people).",
+          "feat1": "Motivating atmosphere",
+          "feat2": "Advantageous rate",
+          "feat3": "Build connections"
+        },
+        "online": {
+          "title": "Online Programs",
+          "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Train where you want, when you want.",
+          "feat1": "24/7 access",
+          "feat2": "Detailed videos",
+          "feat3": "Continuous support"
+        }
+      },
+      "events": {
+        "tag": "Upcoming events",
+        "title": "Meet me at the next sessions",
+        "description": "Group sessions, workshops and wellness events coming soon.",
+        "cta": "Book now",
+        "items": []
+      },
+      "gallery": {
+        "tag": "Gallery",
+        "title": "Examples & Videos",
+        "description": "Discover my workouts and transformations",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=DiYTaQ-Mgck",
+            "title": "post1"
+          }
+        ],
+        "photos": [
+          {
+            "url": "images/1776170803620-images.jpg",
+            "caption": "phoyto1"
+          },
+          {
+            "url": "images/1234.jpg",
+            "caption": "photo2"
+          }
+        ]
+      },
+      "partners": {
+        "tag": "Partnerships",
+        "title": "My Partners",
+        "description": "I collaborate with excellent professionals",
+        "items": [
+          {
+            "name": "yaya",
+            "specialty": "food specialist",
+            "website": "",
+            "image": "",
+            "description": ""
+          },
+          {
+            "name": "CECE",
+            "specialty": "CASSE TOUT",
+            "website": "",
+            "image": "",
+            "description": ""
+          }
+        ]
+      },
+      "testimonials": {
+        "tag": "Testimonials",
+        "title": "What My Clients Say",
+        "clientLabel": "Client for",
+        "items": [
+          {
+            "name": "Marie D.",
+            "duration": "6 months",
+            "rating": 5,
+            "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Alina is an exceptional coach who helped me achieve my goals. I feel stronger and more confident!",
+            "image": "",
+            "status": "pending"
+          },
+          {
+            "name": "Sophie L.",
+            "duration": "1 year",
+            "rating": 5,
+            "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Program perfectly adapted to my needs. The results are visible and I feel great!",
+            "image": ""
+          },
+          {
+            "name": "Anna K.",
+            "duration": "3 months",
+            "rating": 5,
+            "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Caring and professional approach. I highly recommend Alina to all women!",
+            "image": ""
+          }
+        ]
+      },
+      "pricing": {
+        "tag": "Pricing",
+        "title": "Choose Your Plan",
+        "description": "Rates adapted to all budgets",
+        "popular": "Popular",
+        "session": "/ session",
+        "month": "/ month",
+        "book": "Book",
+        "plans": [
+          {
+            "name": "Discovery",
+            "price": "€45",
+            "period": "/ session",
+            "featured": false,
+            "features": [
+              "1 individual session",
+              "Complete assessment",
+              "Personalized program",
+              "Nutrition advice"
+            ]
+          },
+          {
+            "name": "Premium",
+            "price": "€160",
+            "period": "/ month",
+            "featured": true,
+            "features": [
+              "4 sessions / month",
+              "Personal follow-up",
+              "Detailed nutrition plan",
+              "WhatsApp support",
+              "Exclusive video access"
+            ]
+          },
+          {
+            "name": "VIP",
+            "price": "€280",
+            "period": "/ month",
+            "featured": false,
+            "features": [
+              "8 sessions / month",
+              "Daily follow-up",
+              "Nutrition + supplements",
+              "24/7 support",
+              "All programs access",
+              "Partner sessions"
+            ]
+          }
+        ]
+      },
+      "contact": {
+        "tag": "Contact",
+        "title": "Start Your Transformation",
+        "description": "Contact me for a first discovery session",
+        "location": "Location",
+        "locationValue": "Bratislava, Slovakia",
+        "email": "Email",
+        "emailValue": "alina@coaching-bratislava.com",
+        "phone": "Phone / WhatsApp",
+        "phoneValue": "+421 XXX XXX XXX",
+        "hours": "Hours",
+        "schedule": "Mon-Fri: 7am-8pm<br>Sat: 9am-2pm",
+        "form": {
+          "name": "Name *",
+          "email": "Email *",
+          "phone": "Phone",
+          "service": "Desired service",
+          "select": "Select...",
+          "individual": "Individual coaching",
+          "group": "Group sessions",
+          "online": "Online program",
+          "message": "Message *",
+          "send": "Send message"
+        }
+      },
+      "footer": {
+        "tagline": "Your fitness partner in Bratislava",
+        "quick": "Quick Links",
+        "legal": "Legal",
+        "privacy": "Privacy Policy",
+        "terms": "Terms of Use",
+        "cookies": "Cookies",
+        "newsletter": "Newsletter",
+        "subscribe": "Receive my fitness tips",
+        "email": "Your email",
+        "join": "Subscribe",
+        "rights": "All rights reserved."
+      }
+    },
+    "sk": {
+      "nav": {
+        "home": "Domov",
+        "about": "O mne",
+        "services": "Služby",
+        "events": "Podujatia",
+        "gallery": "Galéria",
+        "testimonials": "Referencie",
+        "pricing": "Cenník",
+        "contact": "Kontakt"
+      },
+      "hero": {
+        "title": "Odhaľte Svoj Potenciál",
+        "subtitle": "[Slovak] Coaching fitness personnalisé pour femmes à Bratislava",
+        "description": "[Slovak] Transformez votre corps et votre esprit avec un accompagnement bienveillant et professionnel",
+        "cta": "Rezervovať lekciu",
+        "discover": "[Slovak] Découvrir mes services",
+        "scroll": "[Slovak] Défiler"
+      },
+      "about": {
+        "tag": "Kto som",
+        "title": "O Aline",
+        "subtitle": "Certifikovaná Fitness Trénerka",
+        "experience": "Rokov skúseností",
+        "experienceValue": "5+",
+        "bio1": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Som nadšená pre fitness a wellness, podporujem ženy v ich fyzickej a mentálnej transformácii už viac ako 5 rokov.",
+        "bio2": "Moja filozofia je založená na holistickom prístupe: prispôsobené cvičenia, vyvážená výživa a pozitívne myslenie. Každý program je personalizovaný podľa vašich cieľov a tempa.",
+        "cert1": "Certifikovaná Personal Trainer",
+        "cert2": "Špecialista na výživu",
+        "cert3": "Wellness Kouč",
+        "image": {
+          "src": "",
+          "alt": "Fotka Aliny",
+          "placeholder": "Fotka Aliny"
+        }
+      },
+      "services": {
+        "tag": "Moje Služby",
+        "title": "Koučingové Programy",
+        "description": "Programy prispôsobené vašim potrebám a cieľom",
+        "popular": "Populárne",
+        "learn": "Zistiť viac →",
+        "individual": {
+          "title": "Individuálny Koučing",
+          "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Personalizovaná podpora osobne alebo online.",
+          "feat1": "Program na mieru",
+          "feat2": "Osobné sledovanie",
+          "feat3": "Flexibilný rozvrh"
+        },
+        "group": {
+          "title": "Skupinové Lekcie",
+          "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Dynamický tréning v malých skupinách (max 6 ľudí).",
+          "feat1": "Motivujúca atmosféra",
+          "feat2": "Výhodná cena",
+          "feat3": "Vytváranie vzťahov"
+        },
+        "online": {
+          "title": "Online Programy",
+          "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Trénujte kde chcete, kedy chcete.",
+          "feat1": "Prístup 24/7",
+          "feat2": "Podrobné videá",
+          "feat3": "Nepretržitá podpora"
+        }
+      },
+      "events": {
+        "tag": "Nadchádzajúce podujatia",
+        "title": "Pridajte sa ku mne na najbližších stretnutiach",
+        "description": "Skupinové lekcie, workshopy a wellness podujatia, ktoré sa blížia.",
+        "cta": "Rezervovať",
+        "items": []
+      },
+      "gallery": {
+        "tag": "Galéria",
+        "title": "Príklady & Videá",
+        "description": "Objavte moje tréningy a transformácie",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=DiYTaQ-Mgck",
+            "title": "post1"
+          }
+        ],
+        "photos": [
+          {
+            "url": "images/1776170803620-images.jpg",
+            "caption": "phoyto1"
+          },
+          {
+            "url": "images/1234.jpg",
+            "caption": "photo2"
+          }
+        ]
+      },
+      "partners": {
+        "tag": "Partnerstvá",
+        "title": "Moji Partneri",
+        "description": "Spolupracujem s výbornými profesionálmi",
+        "items": [
+          {
+            "name": "yaya",
+            "specialty": "food specialist",
+            "website": "",
+            "image": "",
+            "description": ""
+          },
+          {
+            "name": "CECE",
+            "specialty": "CASSE TOUT",
+            "website": "",
+            "image": "",
+            "description": ""
+          }
+        ]
+      },
+      "testimonials": {
+        "tag": "Referencie",
+        "title": "Čo Hovoria Moje Klientky",
+        "clientLabel": "Klientka už",
+        "items": [
+          {
+            "name": "Marie D.",
+            "duration": "6 mesiacov",
+            "rating": 5,
+            "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Alina je výnimočná trénerka, ktorá mi pomohla dosiahnuť moje ciele. Cítim sa silnejšia a sebavedomejšia!",
+            "image": "",
+            "status": "pending"
+          },
+          {
+            "name": "Sophie L.",
+            "duration": "1 rok",
+            "rating": 5,
+            "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Program perfektne prispôsobený mojim potrebám. Výsledky sú viditeľné a cítim sa skvelo!",
+            "image": ""
+          },
+          {
+            "name": "Anna K.",
+            "duration": "3 mesiace",
+            "rating": 5,
+            "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Láskavý a profesionálny prístup. Vrelo odporúčam Alinu všetkým ženám!",
+            "image": ""
+          }
+        ]
+      },
+      "pricing": {
+        "tag": "Cenník",
+        "title": "Vyberte Si Svoj Plán",
+        "description": "Ceny prispôsobené všetkým rozpočtom",
+        "popular": "Populárne",
+        "session": "/ lekcia",
+        "month": "/ mesiac",
+        "book": "Rezervovať",
+        "plans": [
+          {
+            "name": "Objavovanie",
+            "price": "€45",
+            "period": "/ lekcia",
+            "featured": false,
+            "features": [
+              "1 individuálna lekcia",
+              "Kompletné hodnotenie",
+              "Personalizovaný program",
+              "Výživové poradenstvo"
+            ]
+          },
+          {
+            "name": "Premium",
+            "price": "€160",
+            "period": "/ mesiac",
+            "featured": true,
+            "features": [
+              "4 lekcie / mesiac",
+              "Osobné sledovanie",
+              "Podrobný výživový plán",
+              "WhatsApp podpora",
+              "Exkluzívny prístup k videám"
+            ]
+          },
+          {
+            "name": "VIP",
+            "price": "€280",
+            "period": "/ mesiac",
+            "featured": false,
+            "features": [
+              "8 lekcií / mesiac",
+              "Denné sledovanie",
+              "Výživa + doplnky",
+              "Podpora 24/7",
+              "Prístup ku všetkým programom",
+              "Partnerské lekcie"
+            ]
+          }
+        ]
+      },
+      "contact": {
+        "tag": "Kontakt",
+        "title": "Začnite Svoju Transformáciu",
+        "description": "Kontaktujte ma pre prvú objavovaciu lekciu",
+        "location": "Lokalita",
+        "locationValue": "Bratislava, Slovensko",
+        "email": "Email",
+        "emailValue": "alina@coaching-bratislava.com",
+        "phone": "Telefón / WhatsApp",
+        "phoneValue": "+421 XXX XXX XXX",
+        "hours": "Hodiny",
+        "schedule": "Pon-Pia: 7:00-20:00<br>Sob: 9:00-14:00",
+        "form": {
+          "name": "Meno *",
+          "email": "Email *",
+          "phone": "Telefón",
+          "service": "Požadovaná služba",
+          "select": "Vyberte...",
+          "individual": "Individuálny koučing",
+          "group": "Skupinové lekcie",
+          "online": "Online program",
+          "message": "Správa *",
+          "send": "Odoslať správu"
+        }
+      },
+      "footer": {
+        "tagline": "Váš fitness partner v Bratislave",
+        "quick": "Rýchle Odkazy",
+        "legal": "Právne",
+        "privacy": "Ochrana súkromia",
+        "terms": "Podmienky používania",
+        "cookies": "Cookies",
+        "newsletter": "Newsletter",
+        "subscribe": "Dostávajte moje fitness tipy",
+        "email": "Váš email",
+        "join": "Prihlásiť sa",
+        "rights": "Všetky práva vyhradené."
+      }
+    },
+    "ua": {
+      "nav": {
+        "home": "Головна",
+        "about": "Про мене",
+        "services": "Послуги",
+        "events": "Події",
+        "gallery": "Галерея",
+        "testimonials": "Відгуки",
+        "pricing": "Ціни",
+        "contact": "Контакт"
+      },
+      "hero": {
+        "title": "Розкрийте Свій Потенціал",
+        "subtitle": "[Ukrainian] Coaching fitness personnalisé pour femmes à Bratislava",
+        "description": "[Ukrainian] Transformez votre corps et votre esprit avec un accompagnement bienveillant et professionnel",
+        "cta": "Забронювати сесію",
+        "discover": "[Ukrainian] Découvrir mes services",
+        "scroll": "[Ukrainian] Défiler"
+      },
+      "about": {
+        "tag": "Хто я",
+        "title": "Про Аліну",
+        "subtitle": "Сертифікований Фітнес-Тренер",
+        "experience": "Років досвіду",
+        "experienceValue": "5+",
+        "bio1": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Захоплена фітнесом та велнесом, я підтримую жінок у їхній фізичній та ментальній трансформації вже понад 5 років.",
+        "bio2": "Моя філософія базується на холістичному підході: адаптовані вправи, збалансоване харчування та позитивне мислення. Кожна програма персоналізована відповідно до ваших цілей та темпу.",
+        "cert1": "Сертифікований Персональний Тренер",
+        "cert2": "Спеціаліст з харчування",
+        "cert3": "Велнес-Коуч",
+        "image": {
+          "src": "",
+          "alt": "Фото Аліни",
+          "placeholder": "Фото Аліни"
+        }
+      },
+      "services": {
+        "tag": "Мої Послуги",
+        "title": "Програми Коучингу",
+        "description": "Програми адаптовані до ваших потреб та цілей",
+        "popular": "Популярне",
+        "learn": "Дізнатися більше →",
+        "individual": {
+          "title": "Індивідуальний Коучинг",
+          "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Персоналізована підтримка особисто або онлайн.",
+          "feat1": "Програма на замовлення",
+          "feat2": "Особисте спостереження",
+          "feat3": "Гнучкий графік"
+        },
+        "group": {
+          "title": "Групові Заняття",
+          "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Динамічні тренування в малих групах (макс 6 осіб).",
+          "feat1": "Мотивуюча атмосфера",
+          "feat2": "Вигідна ціна",
+          "feat3": "Створення зв'язків"
+        },
+        "online": {
+          "title": "Онлайн Програми",
+          "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Тренуйтеся де хочете, коли хочете.",
+          "feat1": "Доступ 24/7",
+          "feat2": "Детальні відео",
+          "feat3": "Постійна підтримка"
+        }
+      },
+      "events": {
+        "tag": "Найближчі події",
+        "title": "Приєднуйтесь до мене на найближчих подіях",
+        "description": "Групові сесії, воркшопи та wellness-події найближчим часом.",
+        "cta": "Забронювати",
+        "items": []
+      },
+      "gallery": {
+        "tag": "Галерея",
+        "title": "Приклади та Відео",
+        "description": "Відкрийте мої тренування та трансформації",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=DiYTaQ-Mgck",
+            "title": "post1"
+          }
+        ],
+        "photos": [
+          {
+            "url": "images/1776170803620-images.jpg",
+            "caption": "phoyto1"
+          },
+          {
+            "url": "images/1234.jpg",
+            "caption": "photo2"
+          }
+        ]
+      },
+      "partners": {
+        "tag": "Партнерства",
+        "title": "Мої Партнери",
+        "description": "Я співпрацюю з чудовими професіоналами",
+        "items": [
+          {
+            "name": "yaya",
+            "specialty": "food specialist",
+            "website": "",
+            "image": "",
+            "description": ""
+          },
+          {
+            "name": "CECE",
+            "specialty": "CASSE TOUT",
+            "website": "",
+            "image": "",
+            "description": ""
+          }
+        ]
+      },
+      "testimonials": {
+        "tag": "Відгуки",
+        "title": "Що Кажуть Мої Клієнтки",
+        "clientLabel": "Клієнтка вже",
+        "items": [
+          {
+            "name": "Marie D.",
+            "duration": "6 місяців",
+            "rating": 5,
+            "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Аліна - виняткова тренерка, яка допомогла мені досягти моїх цілей. Я відчуваю себе сильнішою та впевненішою!",
+            "image": "",
+            "status": "pending"
+          },
+          {
+            "name": "Sophie L.",
+            "duration": "1 рік",
+            "rating": 5,
+            "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Програма ідеально адаптована до моїх потреб. Результати видимі, і я відчуваю себе чудово!",
+            "image": ""
+          },
+          {
+            "name": "Anna K.",
+            "duration": "3 місяці",
+            "rating": 5,
+            "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Турботливий та професійний підхід. Я щиро рекомендую Аліну всім жінкам!",
+            "image": ""
+          }
+        ]
+      },
+      "pricing": {
+        "tag": "Ціни",
+        "title": "Виберіть Свій План",
+        "description": "Ціни адаптовані до всіх бюджетів",
+        "popular": "Популярне",
+        "session": "/ сесія",
+        "month": "/ місяць",
+        "book": "Забронювати",
+        "plans": [
+          {
+            "name": "Відкриття",
+            "price": "€45",
+            "period": "/ сесія",
+            "featured": false,
+            "features": [
+              "1 індивідуальна сесія",
+              "Повна оцінка",
+              "Персоналізована програма",
+              "Поради з харчування"
+            ]
+          },
+          {
+            "name": "Преміум",
+            "price": "€160",
+            "period": "/ місяць",
+            "featured": true,
+            "features": [
+              "4 сесії / місяць",
+              "Особисте спостереження",
+              "Детальний план харчування",
+              "Підтримка WhatsApp",
+              "Ексклюзивний доступ до відео"
+            ]
+          },
+          {
+            "name": "VIP",
+            "price": "€280",
+            "period": "/ місяць",
+            "featured": false,
+            "features": [
+              "8 сесій / місяць",
+              "Щоденне спостереження",
+              "Харчування + добавки",
+              "Підтримка 24/7",
+              "Доступ до всіх програм",
+              "Партнерські сесії"
+            ]
+          }
+        ]
+      },
+      "contact": {
+        "tag": "Контакт",
+        "title": "Почніть Свою Трансформацію",
+        "description": "Зв'яжіться зі мною для першої ознайомчої сесії",
+        "location": "Локація",
+        "locationValue": "Bratislava, Slovakia",
+        "email": "Електронна пошта",
+        "emailValue": "alina@coaching-bratislava.com",
+        "phone": "Телефон / WhatsApp",
+        "phoneValue": "+421 XXX XXX XXX",
+        "hours": "Години",
+        "schedule": "Пн-Пт: 7:00-20:00<br>Сб: 9:00-14:00",
+        "form": {
+          "name": "Ім'я *",
+          "email": "Email *",
+          "phone": "Телефон",
+          "service": "Бажана послуга",
+          "select": "Виберіть...",
+          "individual": "Індивідуальний коучинг",
+          "group": "Групові заняття",
+          "online": "Онлайн програма",
+          "message": "Повідомлення *",
+          "send": "Надіслати повідомлення"
+        }
+      },
+      "footer": {
+        "tagline": "Ваш фітнес-партнер у Братиславі",
+        "quick": "Швидкі Посилання",
+        "legal": "Юридичне",
+        "privacy": "Політика конфіденційності",
+        "terms": "Умови використання",
+        "cookies": "Cookies",
+        "newsletter": "Розсилка",
+        "subscribe": "Отримуйте мої фітнес-поради",
+        "email": "Ваш email",
+        "join": "Підписатися",
+        "rights": "Всі права захищені."
+      }
+    }
+  }
+}

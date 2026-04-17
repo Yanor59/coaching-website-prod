@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nettoyage Galerie</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196F3;
+        }
+        .warning {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #ffc107;
+        }
+        .success {
+            background: #d4edda;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #28a745;
+            display: none;
+        }
+        .error {
+            background: #f8d7da;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #dc3545;
+            display: none;
+        }
+        button {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #c82333;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .stats {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .stats p {
+            margin: 5px 0;
+        }
+        #log {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 14px;
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧹 Nettoyage de la Galerie</h1>
+        
+        <div class="info">
+            <strong>ℹ️ Information</strong><br>
+            Cet outil va supprimer toutes les photos ET vidéos de la galerie dans les 4 langues (FR, EN, SK, UA).
+        </div>
+        
+        <div class="warning">
+            <strong>⚠️ Attention</strong><br>
+            Cette action est irréversible ! Assurez-vous d'avoir un backup de vos données avant de continuer.
+        </div>
+        
+        <div id="stats" class="stats">
+            <p><strong>État actuel :</strong></p>
+            <p id="current-stats">Chargement...</p>
+        </div>
+        
+        <button id="cleanBtn" onclick="cleanGallery()">🗑️ Nettoyer la galerie (photos + vidéos)</button>
+        
+        <div id="success" class="success"></div>
+        <div id="error" class="error"></div>
+        <div id="log"></div>
+    </div>
+
+    <script>
+        const API_URL = '/api/content';
+        let siteContent = null;
+
+        // Charger les données au démarrage
+        window.addEventListener('DOMContentLoaded', loadStats);
+
+        async function loadStats() {
+            try {
+                const response = await fetch(API_URL, { cache: 'no-store' });
+                if (!response.ok) throw new Error('Erreur de chargement');
+                
+                siteContent = await response.json();
+                
+                // Afficher les stats
+                const stats = [];
+                ['fr', 'en', 'sk', 'ua'].forEach(lang => {
+                    const gallery = siteContent.content[lang].gallery;
+                    if (gallery) {
+                        const photosCount = Array.isArray(gallery.photos) ? gallery.photos.length : 0;
+                        const videosCount = Array.isArray(gallery.videos) ? gallery.videos.length : 0;
+                        stats.push(`${lang.toUpperCase()}: ${photosCount} photos, ${videosCount} vidéos`);
+                    } else {
+                        stats.push(`${lang.toUpperCase()}: Pas de galerie`);
+                    }
+                });
+                
+                document.getElementById('current-stats').innerHTML = stats.join('<br>');
+                
+            } catch (error) {
+                document.getElementById('current-stats').textContent = '❌ Erreur: ' + error.message;
+            }
+        }
+
+        async function cleanGallery() {
+            const btn = document.getElementById('cleanBtn');
+            const successDiv = document.getElementById('success');
+            const errorDiv = document.getElementById('error');
+            const logDiv = document.getElementById('log');
+            
+            // Confirmation
+            if (!confirm('Êtes-vous sûr de vouloir supprimer TOUTES les photos ET vidéos de la galerie ?')) {
+                return;
+            }
+            
+            // Désactiver le bouton
+            btn.disabled = true;
+            btn.textContent = '⏳ Nettoyage en cours...';
+            
+            // Afficher le log
+            logDiv.style.display = 'block';
+            logDiv.innerHTML = '';
+            
+            function log(message) {
+                logDiv.innerHTML += message + '<br>';
+                logDiv.scrollTop = logDiv.scrollHeight;
+            }
+            
+            try {
+                log('📥 Chargement des données...');
+                
+                if (!siteContent) {
+                    const response = await fetch(API_URL, { cache: 'no-store' });
+                    if (!response.ok) throw new Error('Erreur de chargement');
+                    siteContent = await response.json();
+                }
+                
+                log('✅ Données chargées');
+                log('🧹 Nettoyage en cours...');
+                
+                // Nettoyer pour chaque langue
+                ['fr', 'en', 'sk', 'ua'].forEach(lang => {
+                    if (!siteContent.content[lang].gallery) {
+                        siteContent.content[lang].gallery = {};
+                    }
+                    siteContent.content[lang].gallery.photos = [];
+                    siteContent.content[lang].gallery.videos = [];
+                    log(`✅ ${lang.toUpperCase()}: galerie nettoyée (photos + vidéos)`);
+                });
+                
+                log('💾 Sauvegarde des modifications...');
+                
+                // Sauvegarder
+                const saveResponse = await fetch(API_URL, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(siteContent)
+                });
+                
+                if (!saveResponse.ok) throw new Error('Erreur de sauvegarde');
+                
+                log('✅ Modifications sauvegardées');
+                log('🎉 Nettoyage terminé avec succès !');
+                
+                // Afficher le succès
+                successDiv.style.display = 'block';
+                successDiv.innerHTML = '<strong>✅ Succès !</strong><br>La galerie a été nettoyée. Toutes les photos et vidéos ont été supprimées.<br><br><a href="admin.html">← Retour à l\'admin</a>';
+                
+                // Recharger les stats
+                await loadStats();
+                
+            } catch (error) {
+                log('❌ ERREUR: ' + error.message);
+                errorDiv.style.display = 'block';
+                errorDiv.innerHTML = '<strong>❌ Erreur</strong><br>' + error.message;
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '🗑️ Nettoyer la galerie (photos + vidéos)';
+            }
+        }
+    </script>
+</body>
+</html>

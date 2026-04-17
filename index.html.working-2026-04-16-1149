@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Alina Coaching Bratislava - Coaching fitness personnalisé pour femmes">
+    <title>Alina Coaching Bratislava | Fitness & Bien-être</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Language Selector -->
+    <div class="language-selector">
+        <button class="lang-toggle-btn" id="publicLangToggle" title="Change language / Змінити мову">
+            🌐
+        </button>
+        <div class="lang-dropdown" id="publicLangDropdown">
+            <button class="lang-btn active" data-lang="fr">🇫🇷 Français</button>
+            <button class="lang-btn" data-lang="en">🇬🇧 English</button>
+            <button class="lang-btn" data-lang="sk">🇸🇰 Slovenčina</button>
+            <button class="lang-btn" data-lang="ua">🇺🇦 Українська</button>
+        </div>
+    </div>
+
+    <!-- Header & Navigation -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="logo">
+                <h1>Alina Coaching</h1>
+                <span class="location">Bratislava</span>
+            </div>
+            <button class="mobile-menu-toggle" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-links">
+                <li><a href="#home" class="nav-link active" data-i18n="nav.home">Accueil</a></li>
+                <li><a href="#about" class="nav-link" data-i18n="nav.about">À propos</a></li>
+                <li><a href="#services" class="nav-link" data-i18n="nav.services">Services</a></li>
+                <li><a href="#events" class="nav-link" data-i18n="nav.events">Événements</a></li>
+                <li><a href="#gallery" class="nav-link" data-i18n="nav.gallery">Galerie</a></li>
+                <li><a href="#partners" class="nav-link" data-i18n="nav.partners">Partenaires</a></li>
+                <li><a href="#testimonials" class="nav-link" data-i18n="nav.testimonials">Témoignages</a></li>
+                <li><a href="#pricing" class="nav-link" data-i18n="nav.pricing">Tarifs</a></li>
+                <li><a href="#contact" class="nav-link" data-i18n="nav.contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h2 class="hero-title" data-i18n="hero.title">Révélez Votre Potentiel</h2>
+            <p class="hero-subtitle" data-i18n="hero.subtitle">Coaching fitness personnalisé pour femmes à Bratislava</p>
+            <p class="hero-description" data-i18n="hero.description">Transformez votre corps et votre esprit avec un accompagnement bienveillant et professionnel</p>
+            <div class="hero-buttons">
+                <a href="#contact" class="btn btn-primary" data-i18n="hero.cta">Réserver une séance</a>
+                <a href="#services" class="btn btn-secondary" data-i18n="hero.discover">Découvrir mes services</a>
+            </div>
+        </div>
+        <div class="hero-scroll">
+            <span data-i18n="hero.scroll">Défiler</span>
+            <div class="scroll-arrow">↓</div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag" data-i18n="about.tag">Qui suis-je</span>
+                <h2 class="section-title" data-i18n="about.title">À Propos d'Alina</h2>
+            </div>
+            <div class="about-content">
+                <div class="about-image">
+                    <div class="image-placeholder">
+                        <span>Photo d'Alina</span>
+                    </div>
+                    <div class="about-badge">
+                        <span class="badge-number">5+</span>
+                        <span class="badge-text" data-i18n="about.experience">Années d'expérience</span>
+                    </div>
+                </div>
+                <div class="about-text">
+                    <h3 data-i18n="about.subtitle">Coach Fitness Certifiée</h3>
+                    <p data-i18n="about.bio1">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Passionnée par le fitness et le bien-être, j'accompagne les femmes dans leur transformation physique et mentale depuis plus de 5 ans.</p>
+                    <p data-i18n="about.bio2">Ma philosophie repose sur une approche holistique : exercices adaptés, nutrition équilibrée et mindset positif. Chaque programme est personnalisé selon vos objectifs et votre rythme.</p>
+                    <div class="about-features">
+                        <div class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span data-i18n="about.cert1">Certifiée Personal Trainer</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span data-i18n="about.cert2">Spécialiste Nutrition</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span data-i18n="about.cert3">Coach Bien-être</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag" data-i18n="services.tag">Mes Services</span>
+                <h2 class="section-title" data-i18n="services.title">Programmes de Coaching</h2>
+                <p class="section-description" data-i18n="services.description">Des programmes adaptés à vos besoins et objectifs</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">💪</div>
+                    <h3 data-i18n="services.individual.title">Coaching Individuel</h3>
+                    <p data-i18n="services.individual.desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Accompagnement personnalisé en présentiel ou en ligne.</p>
+                    <ul class="service-features">
+                        <li data-i18n="services.individual.feat1">Programme sur mesure</li>
+                        <li data-i18n="services.individual.feat2">Suivi personnalisé</li>
+                        <li data-i18n="services.individual.feat3">Flexibilité horaires</li>
+                    </ul>
+                    <a href="#contact" class="service-link" data-i18n="services.learn">En savoir plus →</a>
+                </div>
+
+                <div class="service-card featured">
+                    <div class="featured-badge" data-i18n="services.popular">Populaire</div>
+                    <div class="service-icon">👥</div>
+                    <h3 data-i18n="services.group.title">Séances en Groupe</h3>
+                    <p data-i18n="services.group.desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Entraînements dynamiques en petit groupe (max 6 personnes).</p>
+                    <ul class="service-features">
+                        <li data-i18n="services.group.feat1">Ambiance motivante</li>
+                        <li data-i18n="services.group.feat2">Tarif avantageux</li>
+                        <li data-i18n="services.group.feat3">Créer des liens</li>
+                    </ul>
+                    <a href="#contact" class="service-link" data-i18n="services.learn">En savoir plus →</a>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">🌐</div>
+                    <h3 data-i18n="services.online.title">Programmes en Ligne</h3>
+                    <p data-i18n="services.online.desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Entraînez-vous où vous voulez, quand vous voulez.</p>
+                    <ul class="service-features">
+                        <li data-i18n="services.online.feat1">Accès 24/7</li>
+                        <li data-i18n="services.online.feat2">Vidéos détaillées</li>
+                        <li data-i18n="services.online.feat3">Support continu</li>
+                    </ul>
+                    <a href="#contact" class="service-link" data-i18n="services.learn">En savoir plus →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Events Section -->
+    <section id="events" class="events">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag" data-i18n="events.tag">Prochains événements</span>
+                <h2 class="section-title" data-i18n="events.title">Retrouvez-moi lors des prochains rendez-vous</h2>
+                <p class="section-description" data-i18n="events.description">Séances collectives, ateliers et événements bien-être à venir.</p>
+            </div>
+            <div class="events-grid"></div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="gallery">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag" data-i18n="gallery.tag">Galerie</span>
+                <h2 class="section-title" data-i18n="gallery.title">Exemples & Vidéos</h2>
+                <p class="section-description" data-i18n="gallery.description">Découvrez mes entraînements et transformations</p>
+            </div>
+
+            <!-- Video Gallery -->
+            <div class="video-section">
+                <h3 data-i18n="gallery.videos">Vidéos d'Entraînement</h3>
+                <div class="video-grid">
+                    <div class="video-card">
+                        <div class="video-placeholder">
+                            <span>📹 Instagram Reel</span>
+                            <p>Exercice du jour</p>
+                        </div>
+                    </div>
+                    <div class="video-card">
+                        <div class="video-placeholder">
+                            <span>📹 YouTube</span>
+                            <p>Routine complète</p>
+                        </div>
+                    </div>
+                    <div class="video-card">
+                        <div class="video-placeholder">
+                            <span>📹 Instagram Reel</span>
+                            <p>Conseils nutrition</p>
+                        </div>
+                    </div>
+                    <div class="video-card">
+                        <div class="video-placeholder">
+                            <span>📹 YouTube</span>
+                            <p>Témoignage cliente</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Photo Gallery -->
+            <div class="photo-section">
+                <h3 data-i18n="gallery.photos">Galerie Photos</h3>
+                <div class="photo-grid">
+                    <div class="photo-card">
+                        <div class="photo-placeholder">📷</div>
+                    </div>
+                    <div class="photo-card">
+                        <div class="photo-placeholder">📷</div>
+                    </div>
+                    <div class="photo-card">
+                        <div class="photo-placeholder">📷</div>
+                    </div>
+                    <div class="photo-card">
+                        <div class="photo-placeholder">📷</div>
+                    </div>
+                    <div class="photo-card">
+                        <div class="photo-placeholder">📷</div>
+                    </div>
+                    <div class="photo-card">
+                        <div class="photo-placeholder">📷</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Partners Section -->
+    <section id="partners" class="partners">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag" data-i18n="partners.tag">Partenariats</span>
+                <h2 class="section-title" data-i18n="partners.title">Mes Partenaires</h2>
+                <p class="section-description" data-i18n="partners.description">Je collabore avec d'excellents professionnels</p>
+            </div>
+            <div class="partners-grid">
+                <div class="partner-card">
+                    <div class="partner-image">
+                        <div class="image-placeholder">👤</div>
+                    </div>
+                    <h4>Coach Partner 1</h4>
+                    <p class="partner-specialty" data-i18n="partners.specialty1">Yoga & Pilates</p>
+                    <p data-i18n="partners.desc1">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                </div>
+                <div class="partner-card">
+                    <div class="partner-image">
+                        <div class="image-placeholder">👤</div>
+                    </div>
+                    <h4>Coach Partner 2</h4>
+                    <p class="partner-specialty" data-i18n="partners.specialty2">Nutrition</p>
+                    <p data-i18n="partners.desc2">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                </div>
+                <div class="partner-card">
+                    <div class="partner-image">
+                        <div class="image-placeholder">👤</div>
+                    </div>
+                    <h4>Coach Partner 3</h4>
+                    <p class="partner-specialty" data-i18n="partners.specialty3">Mindset Coach</p>
+                    <p data-i18n="partners.desc3">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag" data-i18n="testimonials.tag">Témoignages</span>
+                <h2 class="section-title" data-i18n="testimonials.title">Ce Que Disent Mes Clientes</h2>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
+                    <p class="testimonial-text" data-i18n="testimonials.text1">"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Alina est une coach exceptionnelle qui m'a aidée à atteindre mes objectifs. Je me sens plus forte et confiante!"</p>
+                    <div class="testimonial-author">
+                        <div class="author-image">
+                            <div class="image-placeholder">👤</div>
+                        </div>
+                        <div class="author-info">
+                            <h4>Marie D.</h4>
+                            <span data-i18n="testimonials.client">Cliente depuis 6 mois</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
+                    <p class="testimonial-text" data-i18n="testimonials.text2">"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Programme parfaitement adapté à mes besoins. Les résultats sont visibles et je me sens en pleine forme!"</p>
+                    <div class="testimonial-author">
+                        <div class="author-image">
+                            <div class="image-placeholder">👤</div>
+                        </div>
+                        <div class="author-info">
+                            <h4>Sophie L.</h4>
+                            <span data-i18n="testimonials.client">Cliente depuis 1 an</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
+                    <p class="testimonial-text" data-i18n="testimonials.text3">"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Approche bienveillante et professionnelle. Je recommande vivement Alina à toutes les femmes!"</p>
+                    <div class="testimonial-author">
+                        <div class="author-image">
+                            <div class="image-placeholder">👤</div>
+                        </div>
+                        <div class="author-info">
+                            <h4>Anna K.</h4>
+                            <span data-i18n="testimonials.client">Cliente depuis 3 mois</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag" data-i18n="pricing.tag">Tarifs</span>
+                <h2 class="section-title" data-i18n="pricing.title">Choisissez Votre Formule</h2>
+                <p class="section-description" data-i18n="pricing.description">Des tarifs adaptés à tous les budgets</p>
+            </div>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3 data-i18n="pricing.starter.name">Découverte</h3>
+                    <div class="price">
+                        <span class="price-amount">€45</span>
+                        <span class="price-period" data-i18n="pricing.session">/ séance</span>
+                    </div>
+                    <ul class="pricing-features">
+                        <li data-i18n="pricing.starter.feat1">1 séance individuelle</li>
+                        <li data-i18n="pricing.starter.feat2">Évaluation complète</li>
+                        <li data-i18n="pricing.starter.feat3">Programme personnalisé</li>
+                        <li data-i18n="pricing.starter.feat4">Conseils nutrition</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-outline" data-i18n="pricing.book">Réserver</a>
+                </div>
+
+                <div class="pricing-card featured">
+                    <div class="featured-badge" data-i18n="pricing.popular">Populaire</div>
+                    <h3 data-i18n="pricing.premium.name">Premium</h3>
+                    <div class="price">
+                        <span class="price-amount">€160</span>
+                        <span class="price-period" data-i18n="pricing.month">/ mois</span>
+                    </div>
+                    <ul class="pricing-features">
+                        <li data-i18n="pricing.premium.feat1">4 séances / mois</li>
+                        <li data-i18n="pricing.premium.feat2">Suivi personnalisé</li>
+                        <li data-i18n="pricing.premium.feat3">Plan nutrition détaillé</li>
+                        <li data-i18n="pricing.premium.feat4">Support WhatsApp</li>
+                        <li data-i18n="pricing.premium.feat5">Accès vidéos exclusives</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-primary" data-i18n="pricing.book">Réserver</a>
+                </div>
+
+                <div class="pricing-card">
+                    <h3 data-i18n="pricing.vip.name">VIP</h3>
+                    <div class="price">
+                        <span class="price-amount">€280</span>
+                        <span class="price-period" data-i18n="pricing.month">/ mois</span>
+                    </div>
+                    <ul class="pricing-features">
+                        <li data-i18n="pricing.vip.feat1">8 séances / mois</li>
+                        <li data-i18n="pricing.vip.feat2">Suivi quotidien</li>
+                        <li data-i18n="pricing.vip.feat3">Nutrition + suppléments</li>
+                        <li data-i18n="pricing.vip.feat4">Support 24/7</li>
+                        <li data-i18n="pricing.vip.feat5">Accès tous programmes</li>
+                        <li data-i18n="pricing.vip.feat6">Séances partenaires</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-outline" data-i18n="pricing.book">Réserver</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag" data-i18n="contact.tag">Contact</span>
+                <h2 class="section-title" data-i18n="contact.title">Commencez Votre Transformation</h2>
+                <p class="section-description" data-i18n="contact.description">Contactez-moi pour une première séance découverte</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="info-card">
+                        <div class="info-icon">📍</div>
+                        <h4 data-i18n="contact.location">Localisation</h4>
+                        <p>Bratislava, Slovaquie</p>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-icon">📧</div>
+                        <h4 data-i18n="contact.email">Email</h4>
+                        <p>alina@coaching-bratislava.com</p>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-icon">📱</div>
+                        <h4 data-i18n="contact.phone">Téléphone / WhatsApp</h4>
+                        <p>+421 XXX XXX XXX</p>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-icon">🕐</div>
+                        <h4 data-i18n="contact.hours">Horaires</h4>
+                        <p data-i18n="contact.schedule">Lun-Ven: 7h-20h<br>Sam: 9h-14h</p>
+                    </div>
+                </div>
+                <form class="contact-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name" data-i18n="contact.form.name">Nom *</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" data-i18n="contact.form.email">Email *</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="phone" data-i18n="contact.form.phone">Téléphone</label>
+                            <input type="tel" id="phone" name="phone">
+                        </div>
+                        <div class="form-group">
+                            <label for="service" data-i18n="contact.form.service">Service souhaité</label>
+                            <select id="service" name="service">
+                                <option value="" data-i18n="contact.form.select">Sélectionnez...</option>
+                                <option value="individual" data-i18n="contact.form.individual">Coaching individuel</option>
+                                <option value="group" data-i18n="contact.form.group">Séances en groupe</option>
+                                <option value="online" data-i18n="contact.form.online">Programme en ligne</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="message" data-i18n="contact.form.message">Message *</label>
+                        <textarea id="message" name="message" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full" data-i18n="contact.form.send">Envoyer le message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Alina Coaching</h3>
+                    <p data-i18n="footer.tagline">Votre partenaire fitness à Bratislava</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Instagram" class="social-link">📷 Instagram</a>
+                        <a href="#" aria-label="YouTube" class="social-link">📹 YouTube</a>
+                        <a href="#" aria-label="Facebook" class="social-link">📘 Facebook</a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4 data-i18n="footer.quick">Liens Rapides</h4>
+                    <ul class="footer-links">
+                        <li><a href="#about" data-i18n="nav.about">À propos</a></li>
+                        <li><a href="#services" data-i18n="nav.services">Services</a></li>
+                        <li><a href="#pricing" data-i18n="nav.pricing">Tarifs</a></li>
+                        <li><a href="#events" data-i18n="nav.events">Événements</a></li>
+                        <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 data-i18n="footer.legal">Légal</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" data-i18n="footer.privacy">Politique de confidentialité</a></li>
+                        <li><a href="#" data-i18n="footer.terms">Conditions d'utilisation</a></li>
+                        <li><a href="#" data-i18n="footer.cookies">Cookies</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 data-i18n="footer.newsletter">Newsletter</h4>
+                    <p data-i18n="footer.subscribe">Recevez mes conseils fitness</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Votre email" data-i18n-placeholder="footer.email">
+                        <button type="submit" data-i18n="footer.join">S'inscrire</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Alina Coaching Bratislava. <span data-i18n="footer.rights">Tous droits réservés.</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" aria-label="Retour en haut">↑</button>
+
+    <script src="js/translations.js"></script>
+    <script src="js/content-loader.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/gallery.js"></script>
+    <script src="js/lightbox.js"></script>
+    <script src="js/api-service.js"></script>
+</body>
+</html>

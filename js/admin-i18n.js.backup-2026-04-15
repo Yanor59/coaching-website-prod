@@ -1,0 +1,587 @@
+// ===== ADMIN INTERNATIONALIZATION =====
+// Traductions pour l'interface admin (FR + UA)
+
+const adminTranslations = {
+    fr: {
+        // Sidebar
+        sidebar: {
+            title: "🏋️‍♀️ Alina Admin",
+            dashboard: "Dashboard",
+            content: "Contenu",
+            events: "Événements",
+            partners: "Partenariats",
+            pricing: "Tarifs",
+            testimonials: "Témoignages",
+            media: "Médias",
+            userRole: "Administration locale"
+        },
+        
+        // Header
+        header: {
+            title: "Administration du site",
+            subtitle: "Modifiez le contenu public et les médias réellement utilisés sur le site.",
+            viewSite: "👁️ Voir le site"
+        },
+        
+        // Dashboard
+        dashboard: {
+            usefulActions: "Actions utiles",
+            focusText: "Cette interface a été simplifiée pour ne garder que les éléments réellement connectés au site. Utilisez les boutons ci-dessous pour modifier le contenu, gérer les médias et mettre à jour les événements."
+        },
+        
+        // Content Editor
+        contentEditor: {
+            title: "📝 Éditeur de Contenu",
+            subtitle: "Modifiez les textes de votre site dans les 4 langues",
+            sectionLabel: "Section à modifier :",
+            sections: {
+                hero: "🏠 Hero (Page d'accueil)",
+                about: "👤 À propos",
+                services: "💪 Services",
+                events: "📅 Événements",
+                gallery: "🖼️ Galerie",
+                partners: "🤝 Partenaires",
+                testimonials: "💬 Témoignages",
+                pricing: "💰 Tarifs",
+                contact: "📧 Contact",
+                footer: "📄 Footer"
+            },
+            languages: {
+                fr: "🇫🇷 Français",
+                en: "🇬🇧 English",
+                sk: "🇸🇰 Slovenčina",
+                ua: "🇺🇦 Українська"
+            },
+            saveButton: "💾 Enregistrer les modifications",
+            previewButton: "👁️ Prévisualiser",
+            autoTranslateButton: "🌍 Traduire automatiquement",
+            saving: "⏳ Enregistrement...",
+            sectionNotFound: "Section non trouvée",
+            browseImage: "📁 Parcourir",
+            autoTranslate: {
+                noContent: "Aucun contenu à traduire",
+                confirmMessage: "Voulez-vous traduire la section '{section}' depuis {lang} vers toutes les autres langues ? Cette action écrasera les traductions existantes.",
+                translating: "Traduction en cours...",
+                success: "✅ Traduction automatique terminée avec succès !",
+                error: "❌ Erreur lors de la traduction automatique"
+            }
+        },
+        
+        // Events Manager
+        eventsManager: {
+            title: "Gestion des Événements",
+            subtitle: "Ajoutez, modifiez ou supprimez vos événements dans les 4 langues",
+            addEvent: "Ajouter un événement",
+            editEvent: "Modifier l'événement",
+            noEvents: "Aucun événement",
+            noEventsDesc: "Cliquez sur \"Ajouter un événement\" pour créer votre premier événement.",
+            edit: "Modifier",
+            activate: "Activer",
+            deactivate: "Désactiver",
+            delete: "Supprimer",
+            confirmDelete: "Êtes-vous sûr de vouloir supprimer cet événement ?",
+            // Form fields
+            form: {
+                day: "Jour",
+                dayPlaceholder: "18",
+                month: "Mois",
+                monthPlaceholder: "Mai",
+                category: "Catégorie",
+                categoryPlaceholder: "Yoga au parc",
+                title: "Titre",
+                titlePlaceholder: "Session outdoor au lever du soleil",
+                time: "Heure",
+                timePlaceholder: "10h00",
+                location: "Lieu",
+                locationPlaceholder: "Parc de Bratislava",
+                description: "Description",
+                descriptionPlaceholder: "Une séance accessible à toutes...",
+                link: "Lien du bouton (optionnel)",
+                linkPlaceholder: "#contact",
+                ctaLabel: "Texte du bouton (optionnel)",
+                ctaPlaceholder: "Réserver",
+                save: "Enregistrer",
+                add: "Ajouter",
+        
+        // Partners Manager
+        partnersManager: {
+            title: "Gestion des Partenariats",
+            subtitle: "Ajoutez, modifiez ou supprimez vos partenaires (max 10)",
+            addPartner: "Ajouter un partenaire",
+            editPartner: "Modifier le partenaire",
+            noPartners: "Aucun partenaire",
+            noPartnersDesc: "Cliquez sur \"Ajouter un partenaire\" pour créer votre premier partenariat.",
+            confirmDelete: "Êtes-vous sûr de vouloir supprimer le partenaire",
+            form: {
+                name: "Nom du partenaire",
+                specialty: "Spécialité",
+                website: "Site web",
+                image: "Image",
+                description: "Description",
+                rolePlaceholder: "Ex: Coach sportif, Nutritionniste..."
+            }
+        },
+        
+        // Pricing Manager
+        pricingManager: {
+            title: "Gestion des Tarifs",
+            subtitle: "Ajoutez, modifiez ou supprimez vos offres tarifaires",
+            addPlan: "Ajouter un tarif",
+            editPlan: "Modifier le tarif",
+            noPlans: "Aucun tarif",
+            noPlansDesc: "Cliquez sur \"Ajouter un tarif\" pour créer votre première offre.",
+            confirmDelete: "Êtes-vous sûr de vouloir supprimer le tarif",
+            plans: "tarifs",
+            popular: "Populaire",
+            moreFeatures: "autres avantages",
+            form: {
+                name: "Nom de l'offre",
+                price: "Prix",
+                originalPrice: "Prix original",
+                originalPriceDesc: "Pour afficher une promotion",
+                duration: "Durée",
+                durationPlaceholder: "mois, séance, etc.",
+                description: "Description",
+                features: "Avantages inclus",
+                featuresPlaceholder: "Un avantage par ligne",
+                featuresHelp: "Entrez un avantage par ligne",
+                markPopular: "Marquer comme populaire"
+            }
+        },
+        
+        // Testimonials Manager
+        testimonialsManager: {
+            title: "Gestion des Témoignages",
+            subtitle: "Modérez et gérez les témoignages de vos clients",
+            addTestimonial: "Ajouter un témoignage",
+            editTestimonial: "Modifier le témoignage",
+            noTestimonials: "Aucun témoignage",
+            noTestimonialsDesc: "Cliquez sur \"Ajouter un témoignage\" pour créer le premier.",
+            confirmDelete: "Êtes-vous sûr de vouloir supprimer le témoignage de",
+            stats: {
+                total: "Total",
+                pending: "En attente",
+                approved: "Approuvés",
+                rejected: "Rejetés"
+            },
+            filters: {
+                all: "Tous",
+                pending: "En attente",
+                approved: "Approuvés",
+                rejected: "Rejetés"
+            },
+            status: {
+                pending: "En attente",
+                approved: "Approuvé",
+                rejected: "Rejeté"
+            },
+            actions: {
+                approve: "Approuver",
+                reject: "Rejeter",
+                pending: "Mettre en attente"
+            },
+            form: {
+                author: "Auteur",
+                role: "Rôle/Profession",
+                rolePlaceholder: "Ex: Cliente depuis 2 ans",
+                rating: "Note",
+                status: "Statut",
+                date: "Date",
+                text: "Témoignage"
+            }
+        },
+                cancel: "Annuler",
+                required: "*"
+            }
+        },
+        
+        // Notifications
+        notifications: {
+            contentLoaded: "✅ Contenu chargé",
+            contentSaved: "✅ Modifications enregistrées avec succès!",
+            errorLoading: "❌ Erreur de chargement du contenu",
+            errorSaving: "❌ Erreur lors de la sauvegarde",
+            uploadInProgress: "⏳ Upload en cours...",
+            uploadSuccess: "✅ Image uploadée avec succès!",
+            uploadError: "❌ Erreur lors de l'upload",
+            invalidImage: "❌ Veuillez sélectionner une image (JPG, PNG, WebP)",
+            imageTooLarge: "❌ L'image est trop grande (max 5 MB)",
+            partnerDeleted: "✅ Partenaire supprimé",
+            planDeleted: "✅ Tarif supprimé",
+            testimonialDeleted: "✅ Témoignage supprimé",
+            testimonialApproved: "✅ Témoignage approuvé",
+            testimonialRejected: "✅ Témoignage rejeté",
+            testimonialPending: "✅ Témoignage mis en attente",
+            orderUpdated: "✅ Ordre mis à jour"
+        },
+        
+        // Modal
+        modal: {
+            addMedia: "Ajouter des Médias",
+            close: "✕",
+            dragDrop: "Glissez-déposez vos fichiers ici",
+            orClick: "ou cliquez pour sélectionner",
+            chooseFiles: "Choisir des fichiers",
+            acceptedFormats: "Formats acceptés: JPG, PNG, WebP, MP4",
+            maxSize: "Taille max: 5 MB par fichier"
+        },
+        
+        // Common
+        common: {
+            save: "Enregistrer",
+            cancel: "Annuler",
+            delete: "Supprimer",
+            edit: "Modifier",
+            add: "Ajouter",
+            close: "Fermer",
+            loading: "Chargement...",
+            success: "Succès",
+            error: "Erreur",
+            moveUp: "Monter",
+            moveDown: "Descendre"
+        }
+    },
+    
+    ua: {
+        // Sidebar
+        sidebar: {
+            title: "🏋️‍♀️ Alina Адмін",
+            dashboard: "Панель",
+            content: "Контент",
+            events: "Події",
+            partners: "Партнерства",
+            pricing: "Ціни",
+            testimonials: "Відгуки",
+            media: "Медіа",
+            userRole: "Локальна адміністрація"
+        },
+        
+        // Header
+        header: {
+            title: "Адміністрування сайту",
+            subtitle: "Редагуйте публічний контент та медіа, які реально використовуються на сайті.",
+            viewSite: "👁️ Переглянути сайт"
+        },
+        
+        // Dashboard
+        dashboard: {
+            usefulActions: "Корисні дії",
+            focusText: "Цей інтерфейс спрощено, щоб залишити лише елементи, які реально підключені до сайту. Використовуйте кнопки нижче для редагування контенту, керування медіа та оновлення подій."
+        },
+        
+        // Content Editor
+        contentEditor: {
+            title: "📝 Редактор Контенту",
+            subtitle: "Редагуйте тексти вашого сайту 4 мовами",
+            sectionLabel: "Розділ для редагування:",
+            sections: {
+                hero: "🏠 Hero (Головна сторінка)",
+                about: "👤 Про мене",
+                services: "💪 Послуги",
+                events: "📅 Події",
+                gallery: "🖼️ Галерея",
+                partners: "🤝 Партнери",
+                testimonials: "💬 Відгуки",
+                pricing: "💰 Ціни",
+                contact: "📧 Контакт",
+                footer: "📄 Футер"
+            },
+            languages: {
+                fr: "🇫🇷 Français",
+                en: "🇬🇧 English",
+                sk: "🇸🇰 Slovenčina",
+                ua: "🇺🇦 Українська"
+            },
+            saveButton: "💾 Зберегти зміни",
+            previewButton: "👁️ Попередній перегляд",
+            autoTranslateButton: "🌍 Автоматичний переклад",
+            saving: "⏳ Збереження...",
+            sectionNotFound: "Розділ не знайдено",
+            browseImage: "📁 Вибрати",
+            autoTranslate: {
+                noContent: "Немає контенту для перекладу",
+                confirmMessage: "Бажаєте перекласти розділ '{section}' з {lang} на всі інші мови? Ця дія перезапише існуючі переклади.",
+                translating: "Переклад...",
+                success: "✅ Автоматичний переклад успішно завершено!",
+                error: "❌ Помилка при автоматичному перекладі"
+            }
+        },
+        
+        // Events Manager
+        eventsManager: {
+            title: "Керування Подіями",
+            subtitle: "Додавайте, редагуйте або видаляйте події 4 мовами",
+            addEvent: "Додати подію",
+            editEvent: "Редагувати подію",
+            noEvents: "Немає подій",
+            noEventsDesc: "Натисніть \"Додати подію\", щоб створити вашу першу подію.",
+            edit: "Редагувати",
+            activate: "Активувати",
+            deactivate: "Деактивувати",
+            delete: "Видалити",
+            confirmDelete: "Ви впевнені, що хочете видалити цю подію?",
+            // Form fields
+            form: {
+                day: "День",
+                dayPlaceholder: "18",
+                month: "Місяць",
+                monthPlaceholder: "Травень",
+                category: "Категорія",
+                categoryPlaceholder: "Йога в парку",
+                title: "Назва",
+                titlePlaceholder: "Ранкова outdoor-сесія",
+                time: "Час",
+                timePlaceholder: "10:00",
+                location: "Місце",
+                locationPlaceholder: "Парк у Братиславі",
+                description: "Опис",
+                descriptionPlaceholder: "Доступна сесія для всіх...",
+                link: "Посилання кнопки (опціонально)",
+                linkPlaceholder: "#contact",
+                buttonLabel: "Текст кнопки",
+                buttonLabelPlaceholder: "Забронювати"
+            }
+        },
+        
+        // Partners Manager
+        partnersManager: {
+            title: "Керування Партнерствами",
+            subtitle: "Додавайте, редагуйте або видаляйте партнерів (макс 10)",
+            addPartner: "Додати партнера",
+            editPartner: "Редагувати партнера",
+            noPartners: "Немає партнерів",
+            noPartnersDesc: "Натисніть \"Додати партнера\", щоб створити перше партнерство.",
+            confirmDelete: "Ви впевнені, що хочете видалити партнера",
+            form: {
+                name: "Ім'я партнера",
+                specialty: "Спеціальність",
+                website: "Веб-сайт",
+                image: "Зображення",
+                description: "Опис",
+                rolePlaceholder: "Напр: Спортивний тренер, Дієтолог..."
+            }
+        },
+        
+        // Pricing Manager
+        pricingManager: {
+            title: "Керування Цінами",
+            subtitle: "Додавайте, редагуйте або видаляйте тарифні пропозиції",
+            addPlan: "Додати тариф",
+            editPlan: "Редагувати тариф",
+            noPlans: "Немає тарифів",
+            noPlansDesc: "Натисніть \"Додати тариф\", щоб створити вашу першу пропозицію.",
+            confirmDelete: "Ви впевнені, що хочете видалити тариф",
+            plans: "тарифів",
+            popular: "Популярний",
+            moreFeatures: "інших переваг",
+            form: {
+                name: "Назва пропозиції",
+                price: "Ціна",
+                originalPrice: "Оригінальна ціна",
+                originalPriceDesc: "Для відображення акції",
+                duration: "Тривалість",
+                durationPlaceholder: "місяць, заняття, тощо",
+                description: "Опис",
+                features: "Включені переваги",
+                featuresPlaceholder: "Одна перевага на рядок",
+                featuresHelp: "Введіть одну перевагу на рядок",
+                markPopular: "Позначити як популярний"
+            }
+        },
+        
+        // Testimonials Manager
+        testimonialsManager: {
+            title: "Керування Відгуками",
+            subtitle: "Модеруйте та керуйте відгуками ваших клієнтів",
+            addTestimonial: "Додати відгук",
+            editTestimonial: "Редагувати відгук",
+            noTestimonials: "Немає відгуків",
+            noTestimonialsDesc: "Натисніть \"Додати відгук\", щоб створити перший.",
+            confirmDelete: "Ви впевнені, що хочете видалити відгук від",
+            stats: {
+                total: "Всього",
+                pending: "Очікують",
+                approved: "Схвалені",
+                rejected: "Відхилені"
+            },
+            filters: {
+                all: "Всі",
+                pending: "Очікують",
+                approved: "Схвалені",
+                rejected: "Відхилені"
+            },
+            status: {
+                pending: "Очікує",
+                approved: "Схвалено",
+                rejected: "Відхилено"
+            },
+            actions: {
+                approve: "Схвалити",
+                reject: "Відхилити",
+                pending: "Поставити в очікування"
+            },
+            form: {
+                author: "Автор",
+                role: "Роль/Професія",
+                rolePlaceholder: "Напр: Клієнтка з 2 років",
+                rating: "Оцінка",
+                status: "Статус",
+                date: "Дата",
+                text: "Відгук"
+            }
+        },
+        
+        // Notifications
+        notifications: {
+            contentLoaded: "✅ Контент завантажено",
+            contentSaved: "✅ Зміни успішно збережено!",
+            errorLoading: "❌ Помилка завантаження контенту",
+            errorSaving: "❌ Помилка при збереженні",
+            uploadInProgress: "⏳ Завантаження...",
+            uploadSuccess: "✅ Зображення успішно завантажено!",
+            uploadError: "❌ Помилка при завантаженні",
+            invalidImage: "❌ Будь ласка, виберіть зображення (JPG, PNG, WebP)",
+            imageTooLarge: "❌ Зображення занадто велике (макс 5 МБ)",
+            partnerDeleted: "✅ Партнера видалено",
+            planDeleted: "✅ Тариф видалено",
+            testimonialDeleted: "✅ Відгук видалено",
+            testimonialApproved: "✅ Відгук схвалено",
+            testimonialRejected: "✅ Відгук відхилено",
+            testimonialPending: "✅ Відгук поставлено в очікування",
+            orderUpdated: "✅ Порядок оновлено"
+        },
+        
+        // Modal
+        modal: {
+            addMedia: "Додати Медіа",
+            close: "✕",
+            dragDrop: "Перетягніть файли сюди",
+            orClick: "або натисніть для вибору",
+            chooseFiles: "Вибрати файли",
+            acceptedFormats: "Прийнятні формати: JPG, PNG, WebP, MP4",
+            maxSize: "Макс розмір: 5 МБ на файл"
+        },
+        
+        // Common
+        common: {
+            save: "Зберегти",
+            cancel: "Скасувати",
+            delete: "Видалити",
+            edit: "Редагувати",
+            add: "Додати",
+            close: "Закрити",
+            loading: "Завантаження...",
+            success: "Успіх",
+            error: "Помилка",
+            moveUp: "Вгору",
+            moveDown: "Вниз"
+        }
+    }
+};
+
+// ===== ADMIN I18N MANAGER =====
+class AdminI18n {
+    constructor() {
+        this.currentLang = localStorage.getItem('adminLanguage') || 'fr';
+        this.translations = adminTranslations;
+    }
+    
+    // Get current language
+    getCurrentLang() {
+        return this.currentLang;
+    }
+    
+    // Set language
+    setLang(lang) {
+        if (this.translations[lang]) {
+            this.currentLang = lang;
+            localStorage.setItem('adminLanguage', lang);
+            this.updateUI();
+            return true;
+        }
+        return false;
+    }
+    
+    // Get translation by key path (e.g., "sidebar.title")
+    t(keyPath) {
+        const keys = keyPath.split('.');
+        let value = this.translations[this.currentLang];
+        
+        for (const key of keys) {
+            if (value && typeof value === 'object') {
+                value = value[key];
+            } else {
+                return keyPath; // Return key if not found
+            }
+        }
+        
+        return value || keyPath;
+    }
+    
+    // Update all UI elements with data-i18n attribute
+    updateUI() {
+        document.querySelectorAll('[data-i18n]').forEach(element => {
+            const key = element.getAttribute('data-i18n');
+            const translation = this.t(key);
+            
+            if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                element.placeholder = translation;
+            } else {
+                element.textContent = translation;
+            }
+        });
+        
+        // Update language selector buttons
+        document.querySelectorAll('.admin-lang-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.lang === this.currentLang);
+        });
+        
+        console.log(`✅ Admin UI updated to: ${this.currentLang}`);
+    }
+    
+    // Initialize i18n system
+    init() {
+        this.updateUI();
+        this.bindLanguageSelector();
+        console.log('✅ Admin i18n initialized');
+    }
+    
+    // Bind language selector buttons
+    bindLanguageSelector() {
+        document.querySelectorAll('.admin-lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const lang = btn.dataset.lang;
+                this.setLang(lang);
+            });
+        });
+    }
+}
+
+// Create global instance
+const adminI18n = new AdminI18n();
+
+// Initialize immediately - don't wait
+adminI18n.bindLanguageSelector();
+console.log('✅ Admin i18n instance created and ready');
+
+// Auto-initialize UI when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        adminI18n.updateUI();
+        console.log('✅ Admin i18n UI initialized on DOMContentLoaded');
+    });
+} else {
+    adminI18n.updateUI();
+    console.log('✅ Admin i18n UI initialized immediately');
+}
+
+// Expose methods globally
+window.adminI18n = adminI18n;
+window.refreshAdminTranslations = () => {
+    adminI18n.updateUI();
+    console.log('🔄 Admin translations refreshed');
+};
+
+console.log('✅ Admin i18n module loaded');
+
+// Made with Bob

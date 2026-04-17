@@ -1,0 +1,707 @@
+// ===== GALLERY MANAGER =====
+// Gestion de la galerie photos et vidéos avec CRUD complet
+
+let galleryData = null;
+const MAX_PHOTOS = 20;
+const MAX_VIDEOS = 10;
+
+// ===== RENDER GALLERY MANAGER =====
+function renderGalleryManager() {
+    const mainContent = document.querySelector('.admin-content');
+    if (!mainContent || !siteContent) {
+        console.error('Cannot render gallery manager');
+        return;
+    }
+    
+    const t = (key) => typeof adminI18n !== 'undefined' ? adminI18n.t(key) : key;
+    
+    // Get gallery data for all languages
+    galleryData = {
+        fr: siteContent.content.fr.gallery || { photos: [], videos: [] },
+        en: siteContent.content.en.gallery || { photos: [], videos: [] },
+        sk: siteContent.content.sk.gallery || { photos: [], videos: [] },
+        ua: siteContent.content.ua.gallery || { photos: [], videos: [] }
+    };
+    
+    const photos = galleryData.fr.photos || [];
+    const videos = galleryData.fr.videos || [];
+    const canAddMorePhotos = photos.length < MAX_PHOTOS;
+    const canAddMoreVideos = videos.length < MAX_VIDEOS;
+    
+    mainContent.innerHTML = `
+        <div class="gallery-manager-container">
+            <div class="manager-header">
+                <h2>🖼️ ${t('galleryManager.title')}</h2>
+                <p>${t('galleryManager.subtitle')}</p>
+            </div>
+            
+            <!-- Photos Section -->
+            <div class="gallery-section">
+                <div class="section-header-inline">
+                    <h3>📷 ${t('galleryManager.photos')} (${photos.length} / ${MAX_PHOTOS})</h3>
+                    ${canAddMorePhotos ? `
+                        <button id="add-photo-btn" class="btn-primary">
+                            ➕ ${t('galleryManager.addPhoto')}
+                        </button>
+                    ` : `
+                        <span class="text-muted">⚠️ Limite atteinte</span>
+                    `}
+                </div>
+                
+                <div id="photos-list" class="gallery-grid">
+                    ${photos.length === 0 ? `
+                        <div class="empty-state">
+                            <p>📷 ${t('galleryManager.noPhotos')}</p>
+                        </div>
+                    ` : renderPhotosList(photos)}
+                </div>
+            </div>
+            
+            <!-- Videos Section -->
+            <div class="gallery-section">
+                <div class="section-header-inline">
+                    <h3>🎥 ${t('galleryManager.videos')} (${videos.length} / ${MAX_VIDEOS})</h3>
+                    ${canAddMoreVideos ? `
+                        <button id="add-video-btn" class="btn-primary">
+                            ➕ ${t('galleryManager.addVideo')}
+                        </button>
+                    ` : `
+                        <span class="text-muted">⚠️ Limite atteinte</span>
+                    `}
+                </div>
+                
+                <div id="videos-list" class="gallery-grid">
+                    ${videos.length === 0 ? `
+                        <div class="empty-state">
+                            <p>🎥 ${t('galleryManager.noVideos')}</p>
+                        </div>
+                    ` : renderVideosList(videos)}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal for add/edit photo -->
+        <div id="photo-modal" class="modal">
+            <div class="modal-content">
+                <span class="modal-close">&times;</span>
+                <h3 id="photo-modal-title">${t('galleryManager.addPhoto')}</h3>
+                <form id="photo-form">
+                    <input type="hidden" id="photo-index" value="-1">
+                    
+                    <div class="form-group">
+                        <label data-i18n="galleryManager.form.imageUrl">${t('galleryManager.form.imageUrl')} *</label>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="text" id="photo-url" class="form-control" required placeholder="images/photo.jpg" style="flex: 1;">
+                            <input type="file" id="photo-file-input" accept="image/*" style="display: none;">
+                            <button type="button" id="browse-photo-btn" class="btn-secondary" style="white-space: nowrap;">
+                                📁 ${t('contentEditor.browseImage')}
+                            </button>
+                        </div>
+                        <small>Chemin vers l'image (ex: images/photo.jpg) ou sélectionnez un fichier</small>
+                    </div>
+                    
+                    <div class="language-tabs">
+                        <button type="button" class="lang-tab active" data-lang="fr">🇫🇷 FR</button>
+                        <button type="button" class="lang-tab" data-lang="en">🇬🇧 EN</button>
+                        <button type="button" class="lang-tab" data-lang="sk">🇸🇰 SK</button>
+                        <button type="button" class="lang-tab" data-lang="ua">🇺🇦 UA</button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label id="caption-label-fr" data-i18n="galleryManager.form.caption">${t('galleryManager.form.caption')} (FR)</label>
+                        <input type="text" id="photo-caption-fr" class="form-control">
+                        
+                        <label id="caption-label-en" data-i18n="galleryManager.form.caption" style="display:none">${t('galleryManager.form.caption')} (EN)</label>
+                        <input type="text" id="photo-caption-en" class="form-control" style="display:none">
+                        
+                        <label id="caption-label-sk" data-i18n="galleryManager.form.caption" style="display:none">${t('galleryManager.form.caption')} (SK)</label>
+                        <input type="text" id="photo-caption-sk" class="form-control" style="display:none">
+                        
+                        <label id="caption-label-ua" data-i18n="galleryManager.form.caption" style="display:none">${t('galleryManager.form.caption')} (UA)</label>
+                        <input type="text" id="photo-caption-ua" class="form-control" style="display:none">
+                    </div>
+                    
+                    <div class="modal-actions">
+                        <button type="button" class="btn-secondary" id="cancel-photo-btn" data-i18n="common.cancel">
+                            ${t('common.cancel')}
+                        </button>
+                        <button type="submit" class="btn-primary" data-i18n="common.save">
+                            💾 ${t('common.save')}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Modal for add/edit video -->
+        <div id="video-modal" class="modal">
+            <div class="modal-content">
+                <span class="modal-close">&times;</span>
+                <h3 id="video-modal-title">${t('galleryManager.addVideo')}</h3>
+                <form id="video-form">
+                    <input type="hidden" id="video-index" value="-1">
+                    
+                    <div class="form-group">
+                        <label data-i18n="galleryManager.form.youtubeUrl">${t('galleryManager.form.youtubeUrl')} *</label>
+                        <input type="url" id="video-url" class="form-control" required placeholder="https://www.youtube.com/watch?v=...">
+                        <small>URL complète de la vidéo YouTube</small>
+                    </div>
+                    
+                    <div class="language-tabs">
+                        <button type="button" class="lang-tab active" data-lang="fr">🇫🇷 FR</button>
+                        <button type="button" class="lang-tab" data-lang="en">🇬🇧 EN</button>
+                        <button type="button" class="lang-tab" data-lang="sk">🇸🇰 SK</button>
+                        <button type="button" class="lang-tab" data-lang="ua">🇺🇦 UA</button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label id="video-title-label-fr" data-i18n="galleryManager.form.videoTitle">${t('galleryManager.form.videoTitle')} (FR) *</label>
+                        <input type="text" id="video-title-fr" class="form-control" required>
+                        
+                        <label id="video-title-label-en" data-i18n="galleryManager.form.videoTitle" style="display:none">${t('galleryManager.form.videoTitle')} (EN) *</label>
+                        <input type="text" id="video-title-en" class="form-control" style="display:none">
+                        
+                        <label id="video-title-label-sk" data-i18n="galleryManager.form.videoTitle" style="display:none">${t('galleryManager.form.videoTitle')} (SK) *</label>
+                        <input type="text" id="video-title-sk" class="form-control" style="display:none">
+                        
+                        <label id="video-title-label-ua" data-i18n="galleryManager.form.videoTitle" style="display:none">${t('galleryManager.form.videoTitle')} (UA) *</label>
+                        <input type="text" id="video-title-ua" class="form-control" style="display:none">
+                    </div>
+                    
+                    <div class="modal-actions">
+                        <button type="button" class="btn-secondary" id="cancel-video-btn" data-i18n="common.cancel">
+                            ${t('common.cancel')}
+                        </button>
+                        <button type="submit" class="btn-primary" data-i18n="common.save">
+                            💾 ${t('common.save')}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    `;
+    
+    bindGalleryEvents();
+    
+    // Refresh translations
+    setTimeout(() => {
+        if (typeof window.refreshAdminTranslations === 'function') {
+            console.log('🔄 Refreshing translations for Gallery section...');
+            window.refreshAdminTranslations();
+        }
+    }, 500);
+}
+
+// ===== RENDER PHOTOS LIST =====
+function renderPhotosList(photos) {
+    if (!Array.isArray(photos)) {
+        console.warn('Photos is not an array:', photos);
+        return '<div class="empty-state"><p>📷 Aucune photo</p></div>';
+    }
+    return photos.map((photo, index) => `
+        <div class="gallery-item photo-item" data-index="${index}">
+            <img src="${photo.url}" alt="${photo.caption || 'Photo'}" class="gallery-thumbnail">
+            <div class="gallery-item-overlay">
+                <p class="gallery-item-caption">${photo.caption || 'Sans légende'}</p>
+                <div class="gallery-item-actions">
+                    <button class="btn-icon edit-photo-btn" data-index="${index}" title="Modifier">
+                        ✏️
+                    </button>
+                    <button class="btn-icon delete-photo-btn" data-index="${index}" title="Supprimer">
+                        🗑️
+                    </button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// ===== RENDER VIDEOS LIST =====
+function renderVideosList(videos) {
+    if (!Array.isArray(videos)) {
+        console.warn('Videos is not an array:', videos);
+        return '<div class="empty-state"><p>🎥 Aucune vidéo</p></div>';
+    }
+    return videos.map((video, index) => {
+        const videoId = extractYouTubeId(video.url);
+        const thumbnailUrl = videoId ? `https://img.youtube.com/vi/${videoId}/mqdefault.jpg` : '';
+        
+        return `
+            <div class="gallery-item video-item" data-index="${index}">
+                ${thumbnailUrl ? `
+                    <img src="${thumbnailUrl}" alt="${video.title}" class="gallery-thumbnail">
+                ` : `
+                    <div class="video-placeholder">🎥</div>
+                `}
+                <div class="gallery-item-overlay">
+                    <p class="gallery-item-caption">${video.title}</p>
+                    <div class="gallery-item-actions">
+                        <button class="btn-icon edit-video-btn" data-index="${index}" title="Modifier">
+                            ✏️
+                        </button>
+                        <button class="btn-icon delete-video-btn" data-index="${index}" title="Supprimer">
+                            🗑️
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// ===== EXTRACT YOUTUBE ID =====
+function extractYouTubeId(url) {
+    if (!url) return null;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+}
+
+// ===== BIND GALLERY EVENTS =====
+function bindGalleryEvents() {
+    // Add photo button
+    const addPhotoBtn = document.getElementById('add-photo-btn');
+    if (addPhotoBtn) {
+        addPhotoBtn.addEventListener('click', () => openPhotoModal());
+    }
+    
+    // Add video button
+    const addVideoBtn = document.getElementById('add-video-btn');
+    if (addVideoBtn) {
+        addVideoBtn.addEventListener('click', () => openVideoModal());
+    }
+    
+    // Edit/Delete photo buttons
+    document.querySelectorAll('.edit-photo-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const index = parseInt(e.target.dataset.index);
+            openPhotoModal(index);
+        });
+    });
+    
+    document.querySelectorAll('.delete-photo-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const index = parseInt(e.target.dataset.index);
+            deletePhoto(index);
+        });
+    });
+    
+    // Edit/Delete video buttons
+    document.querySelectorAll('.edit-video-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const index = parseInt(e.target.dataset.index);
+            openVideoModal(index);
+        });
+    });
+    
+    document.querySelectorAll('.delete-video-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const index = parseInt(e.target.dataset.index);
+            deleteVideo(index);
+        });
+    });
+    
+    // Photo modal events
+    const photoModal = document.getElementById('photo-modal');
+    const photoForm = document.getElementById('photo-form');
+    const cancelPhotoBtn = document.getElementById('cancel-photo-btn');
+    
+    if (photoModal) {
+        photoModal.querySelector('.modal-close').addEventListener('click', () => {
+            photoModal.classList.remove('active');
+        });
+        
+        photoModal.addEventListener('click', (e) => {
+            if (e.target === photoModal) {
+                photoModal.classList.remove('active');
+            }
+        });
+    }
+    
+    if (cancelPhotoBtn) {
+        cancelPhotoBtn.addEventListener('click', () => {
+            photoModal.classList.remove('active');
+        });
+    }
+    
+    if (photoForm) {
+        photoForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            savePhoto();
+        });
+    }
+    
+    // Video modal events
+    const videoModal = document.getElementById('video-modal');
+    const videoForm = document.getElementById('video-form');
+    const cancelVideoBtn = document.getElementById('cancel-video-btn');
+    
+    if (videoModal) {
+        videoModal.querySelector('.modal-close').addEventListener('click', () => {
+            videoModal.classList.remove('active');
+        });
+        
+        videoModal.addEventListener('click', (e) => {
+            if (e.target === videoModal) {
+                videoModal.classList.remove('active');
+            }
+        });
+    }
+    
+    if (cancelVideoBtn) {
+        cancelVideoBtn.addEventListener('click', () => {
+            videoModal.classList.remove('active');
+        });
+    }
+    
+    if (videoForm) {
+        videoForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            saveVideo();
+        });
+    }
+    
+    // Language tabs for both modals
+    document.querySelectorAll('.lang-tab').forEach(tab => {
+        tab.addEventListener('click', (e) => {
+            const lang = e.target.dataset.lang;
+            const modal = e.target.closest('.modal');
+            
+            // Update active tab
+            modal.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
+            e.target.classList.add('active');
+            
+            // Show/hide fields based on modal type
+            if (modal.id === 'photo-modal') {
+                ['fr', 'en', 'sk', 'ua'].forEach(l => {
+                    const label = document.getElementById(`caption-label-${l}`);
+                    const input = document.getElementById(`photo-caption-${l}`);
+                    if (label && input) {
+                        label.style.display = l === lang ? '' : 'none';
+                        input.style.display = l === lang ? '' : 'none';
+                    }
+                });
+            } else if (modal.id === 'video-modal') {
+                ['fr', 'en', 'sk', 'ua'].forEach(l => {
+                    const label = document.getElementById(`video-title-label-${l}`);
+                    const input = document.getElementById(`video-title-${l}`);
+                    if (label && input) {
+                        label.style.display = l === lang ? '' : 'none';
+                        input.style.display = l === lang ? '' : 'none';
+                    }
+                });
+            }
+        });
+    
+    });
+}
+
+// ===== OPEN PHOTO MODAL =====
+function openPhotoModal(index = -1) {
+    const modal = document.getElementById('photo-modal');
+    const form = document.getElementById('photo-form');
+    const t = (key) => typeof adminI18n !== 'undefined' ? adminI18n.t(key) : key;
+    
+    form.reset();
+    document.getElementById('photo-index').value = index;
+    
+    if (index >= 0) {
+        const photo = galleryData.fr.photos[index];
+        document.getElementById('photo-modal-title').textContent = t('galleryManager.editPhoto');
+        document.getElementById('photo-url').value = photo.url || '';
+        
+        // Load captions for all languages
+        ['fr', 'en', 'sk', 'ua'].forEach(lang => {
+            const langPhoto = galleryData[lang].photos[index];
+            const input = document.getElementById(`photo-caption-${lang}`);
+            if (input && langPhoto) {
+                input.value = langPhoto.caption || '';
+            }
+        });
+    } else {
+        document.getElementById('photo-modal-title').textContent = t('galleryManager.addPhoto');
+    }
+    
+    modal.classList.add('active');
+}
+
+    
+    // Setup browse photo button (must be after modal is shown)
+    setupBrowsePhotoButton();
+// ===== OPEN VIDEO MODAL =====
+function openVideoModal(index = -1) {
+    const modal = document.getElementById('video-modal');
+    const form = document.getElementById('video-form');
+    const t = (key) => typeof adminI18n !== 'undefined' ? adminI18n.t(key) : key;
+    
+    form.reset();
+    document.getElementById('video-index').value = index;
+    
+    if (index >= 0) {
+        const video = galleryData.fr.videos[index];
+        document.getElementById('video-modal-title').textContent = t('galleryManager.editVideo');
+        document.getElementById('video-url').value = video.url || '';
+        
+        // Load titles for all languages
+        ['fr', 'en', 'sk', 'ua'].forEach(lang => {
+            const langVideo = galleryData[lang].videos[index];
+            const input = document.getElementById(`video-title-${lang}`);
+            if (input && langVideo) {
+                input.value = langVideo.title || '';
+            }
+        });
+    } else {
+        document.getElementById('video-modal-title').textContent = t('galleryManager.addVideo');
+    }
+    
+    modal.classList.add('active');
+}
+
+// ===== SAVE PHOTO =====
+async function savePhoto() {
+    const index = parseInt(document.getElementById('photo-index').value);
+    const url = document.getElementById('photo-url').value.trim();
+    
+    if (!url) {
+        alert('Veuillez entrer une URL d\'image');
+        return;
+    }
+    
+    const photoData = {
+        url: url,
+        caption: {}
+    };
+    
+    // Get captions for all languages
+    ['fr', 'en', 'sk', 'ua'].forEach(lang => {
+        const input = document.getElementById(`photo-caption-${lang}`);
+        photoData.caption[lang] = input ? input.value.trim() : '';
+    });
+    
+    // Update all languages
+    ['fr', 'en', 'sk', 'ua'].forEach(lang => {
+        if (!galleryData[lang].photos) {
+            galleryData[lang].photos = [];
+        }
+        
+        const photo = {
+            url: photoData.url,
+            caption: photoData.caption[lang]
+        };
+        
+        if (index >= 0) {
+            galleryData[lang].photos[index] = photo;
+        } else {
+            galleryData[lang].photos.push(photo);
+        }
+        
+        siteContent.content[lang].gallery = galleryData[lang];
+    });
+    
+    // Save to server
+    const success = await saveSiteContent();
+    
+    if (success) {
+        document.getElementById('photo-modal').classList.remove('active');
+        renderGalleryManager();
+        showNotification('Photo enregistrée avec succès', 'success');
+    } else {
+        showNotification('Erreur lors de l\'enregistrement', 'error');
+    }
+}
+
+// ===== SAVE VIDEO =====
+async function saveVideo() {
+    const index = parseInt(document.getElementById('video-index').value);
+    const url = document.getElementById('video-url').value.trim();
+    
+    if (!url) {
+        alert('Veuillez entrer une URL YouTube');
+        return;
+    }
+    
+    // Validate YouTube URL
+    const videoId = extractYouTubeId(url);
+    if (!videoId) {
+        alert('URL YouTube invalide');
+        return;
+    }
+    
+    const videoData = {
+        url: url,
+        title: {}
+    };
+    
+    // Get titles for all languages
+    ['fr', 'en', 'sk', 'ua'].forEach(lang => {
+        const input = document.getElementById(`video-title-${lang}`);
+        videoData.title[lang] = input ? input.value.trim() : '';
+    });
+    
+    // Check if at least FR title is provided
+    if (!videoData.title.fr) {
+        alert('Veuillez entrer un titre en français');
+        return;
+    }
+    
+    // Update all languages
+    ['fr', 'en', 'sk', 'ua'].forEach(lang => {
+        if (!galleryData[lang].videos) {
+            galleryData[lang].videos = [];
+        }
+        
+        const video = {
+            url: videoData.url,
+            title: videoData.title[lang] || videoData.title.fr
+        };
+        
+        if (index >= 0) {
+            galleryData[lang].videos[index] = video;
+        } else {
+            galleryData[lang].videos.push(video);
+        }
+        
+        siteContent.content[lang].gallery = galleryData[lang];
+    });
+    
+    // Save to server
+    const success = await saveSiteContent();
+    
+    if (success) {
+        document.getElementById('video-modal').classList.remove('active');
+        renderGalleryManager();
+        showNotification('Vidéo enregistrée avec succès', 'success');
+    } else {
+        showNotification('Erreur lors de l\'enregistrement', 'error');
+    }
+}
+
+// ===== DELETE PHOTO =====
+async function deletePhoto(index) {
+    const t = (key) => typeof adminI18n !== 'undefined' ? adminI18n.t(key) : key;
+    
+    if (!confirm(t('galleryManager.confirmDeletePhoto'))) {
+        return;
+    }
+    
+    // Remove from all languages
+    ['fr', 'en', 'sk', 'ua'].forEach(lang => {
+        if (galleryData[lang].photos && galleryData[lang].photos[index]) {
+            galleryData[lang].photos.splice(index, 1);
+            siteContent.content[lang].gallery = galleryData[lang];
+        }
+    });
+    
+    const success = await saveSiteContent();
+    
+    if (success) {
+        renderGalleryManager();
+        showNotification('Photo supprimée avec succès', 'success');
+    } else {
+        showNotification('Erreur lors de la suppression', 'error');
+    }
+}
+
+// ===== DELETE VIDEO =====
+async function deleteVideo(index) {
+    const t = (key) => typeof adminI18n !== 'undefined' ? adminI18n.t(key) : key;
+    
+    if (!confirm(t('galleryManager.confirmDeleteVideo'))) {
+        return;
+    }
+    
+    // Remove from all languages
+    ['fr', 'en', 'sk', 'ua'].forEach(lang => {
+        if (galleryData[lang].videos && galleryData[lang].videos[index]) {
+            galleryData[lang].videos.splice(index, 1);
+            siteContent.content[lang].gallery = galleryData[lang];
+        }
+    });
+    
+    const success = await saveSiteContent();
+    
+    if (success) {
+        renderGalleryManager();
+        showNotification('Vidéo supprimée avec succès', 'success');
+    } else {
+        showNotification('Erreur lors de la suppression', 'error');
+    }
+}
+
+// Made with Bob
+
+// ===== SETUP BROWSE PHOTO BUTTON =====
+function setupBrowsePhotoButton() {
+    const browsePhotoBtn = document.getElementById('browse-photo-btn');
+    const photoFileInput = document.getElementById('photo-file-input');
+    
+    if (!browsePhotoBtn || !photoFileInput) return;
+    
+    // Remove existing listeners by cloning
+    const newBrowseBtn = browsePhotoBtn.cloneNode(true);
+    browsePhotoBtn.parentNode.replaceChild(newBrowseBtn, browsePhotoBtn);
+    
+    const newFileInput = photoFileInput.cloneNode(true);
+    photoFileInput.parentNode.replaceChild(newFileInput, photoFileInput);
+    
+    // Add click listener
+    newBrowseBtn.addEventListener('click', () => {
+        newFileInput.click();
+    });
+    
+    // Add change listener
+    newFileInput.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            alert('❌ Veuillez sélectionner une image (JPG, PNG, WebP)');
+            return;
+        }
+        
+        // Validate file size (5MB max)
+        if (file.size > 5 * 1024 * 1024) {
+            alert('❌ L\'image est trop grande (max 5 MB)');
+            return;
+        }
+        
+        // Show loading state
+        newBrowseBtn.disabled = true;
+        newBrowseBtn.textContent = '⏳ Upload...';
+        
+        try {
+            // Create FormData
+            const formData = new FormData();
+            formData.append('image', file);
+            
+            // Upload to server
+            const response = await fetch('upload-image.php', {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (!response.ok) {
+                throw new Error('Upload failed');
+            }
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                // Set the uploaded image path in the input
+                document.getElementById('photo-url').value = result.path;
+                showNotification('✅ Image uploadée avec succès!', 'success');
+            } else {
+                throw new Error(result.error || 'Upload failed');
+            }
+        } catch (error) {
+            console.error('Upload error:', error);
+            showNotification('❌ Erreur lors de l\'upload: ' + error.message, 'error');
+        } finally {
+            // Reset button state
+            newBrowseBtn.disabled = false;
+            newBrowseBtn.textContent = '📁 ' + (typeof adminI18n !== 'undefined' ? adminI18n.t('contentEditor.browseImage') : 'Parcourir');
+            newFileInput.value = '';
+        }
+    });
+}
