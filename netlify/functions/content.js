@@ -1,6 +1,5 @@
-const fs = require('fs').promises;
-const path = require('path');
-const https = require('https');
+// Content management with GitHub API integration
+// Reads content from deployed site, writes via GitHub API
 
 // Helper to verify JWT token
 function verifyAuth(headers) {
@@ -17,11 +16,11 @@ function verifyAuth(headers) {
 // GET - Read content from deployed site
 async function getContent(event) {
   try {
-    // Get the site URL from Netlify environment or construct it
+    // Get the site URL from Netlify environment
     const siteUrl = process.env.URL || `https://${event.headers.host}`;
     const contentUrl = `${siteUrl}/data/site-content.json`;
     
-    console.log('Fetching content from:', contentUrl);
+    console.log('📖 Fetching content from:', contentUrl);
     
     // Fetch the content file from the deployed site
     const response = await fetch(contentUrl);
@@ -31,6 +30,7 @@ async function getContent(event) {
     }
     
     const data = await response.text();
+    console.log('✅ Content loaded successfully');
     
     return {
       statusCode: 200,
@@ -41,44 +41,145 @@ async function getContent(event) {
       body: data
     };
   } catch (error) {
-    console.error('Error reading content:', error);
+    console.error('❌ Error reading content:', error);
     return {
       statusCode: 500,
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*'
       },
-      body: JSON.stringify({
+      body: JSON.stringify({ 
         error: 'Failed to read content',
-        message: error.message
+        message: error.message 
       })
     };
   }
 }
 
-// PUT - Update content (Note: This won't work on Netlify without Git integration)
+// PUT - Update content via GitHub API
 async function updateContent(body, headers) {
   // Verify authentication
   if (!verifyAuth(headers)) {
     return {
       statusCode: 401,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      },
       body: JSON.stringify({ error: 'Unauthorized' })
     };
   }
 
-  // On Netlify, we can't write to the filesystem
-  // This would require GitHub API integration or a database
-  return {
-    statusCode: 501,
-    headers: {
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*'
-    },
-    body: JSON.stringify({
-      error: 'Content updates require GitHub integration',
-      message: 'Please use localStorage for now or implement GitHub API'
-    })
-  };
+  try {
+    // Parse and validate content
+    const content = JSON.parse(body);
+    
+    // Basic validation
+    if (!content.site || !content.languages || !content.content) {
+      return {
+        statusCode: 400,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+        },
+        body: JSON.stringify({ error: 'Invalid content structure' })
+      };
+    }
+
+    // Get GitHub credentials from environment
+    const githubToken = process.env.GITHUB_TOKEN;
+    const githubOwner = process.env.GITHUB_OWNER;
+    const githubRepo = process.env.GITHUB_REPO;
+
+    if (!githubToken || !githubOwner || !githubRepo) {
+      console.error('❌ Missing GitHub configuration');
+      return {
+        statusCode: 500,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+        },
+        body: JSON.stringify({ 
+          error: 'GitHub integration not configured',
+          message: 'Please add GITHUB_TOKEN, GITHUB_OWNER, and GITHUB_REPO to Netlify environment variables'
+        })
+      };
+    }
+
+    const filePath = 'data/site-content.json';
+    const apiUrl = `https://api.github.com/repos/${githubOwner}/${githubRepo}/contents/${filePath}`;
+
+    console.log('📝 Updating content via GitHub API:', apiUrl);
+
+    // Step 1: Get current file SHA (required for update)
+    const getResponse = await fetch(apiUrl, {
+      headers: {
+        'Authorization': `token ${githubToken}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'User-Agent': 'Netlify-Function'
+      }
+    });
+
+    if (!getResponse.ok) {
+      throw new Error(`Failed to get file SHA: ${getResponse.status} ${getResponse.statusText}`);
+    }
+
+    const fileData = await getResponse.json();
+    const currentSha = fileData.sha;
+
+    // Step 2: Update file with new content
+    const contentBase64 = Buffer.from(JSON.stringify(content, null, 2)).toString('base64');
+    
+    const updateResponse = await fetch(apiUrl, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `token ${githubToken}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json',
+        'User-Agent': 'Netlify-Function'
+      },
+      body: JSON.stringify({
+        message: 'Update content via admin interface',
+        content: contentBase64,
+        sha: currentSha,
+        branch: 'main'
+      })
+    });
+
+    if (!updateResponse.ok) {
+      const errorData = await updateResponse.json();
+      throw new Error(`GitHub API error: ${updateResponse.status} - ${errorData.message}`);
+    }
+
+    const updateData = await updateResponse.json();
+    console.log('✅ Content updated successfully:', updateData.commit.sha);
+
+    return {
+      statusCode: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      },
+      body: JSON.stringify({ 
+        success: true,
+        message: 'Content updated successfully. Site will redeploy in 1-2 minutes.',
+        commit: updateData.commit.sha
+      })
+    };
+  } catch (error) {
+    console.error('❌ Error updating content:', error);
+    return {
+      statusCode: 500,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      },
+      body: JSON.stringify({ 
+        error: 'Failed to update content',
+        message: error.message 
+      })
+    };
+  }
 }
 
 // Main handler
@@ -107,9 +208,13 @@ exports.handler = async (event, context) => {
     default:
       return {
         statusCode: 405,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+        },
         body: JSON.stringify({ error: 'Method not allowed' })
       };
   }
 };
 
-// Made with Bob
+// Made with Bob - GitHub API Integration
