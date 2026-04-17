@@ -1,8 +1,6 @@
 const fs = require('fs').promises;
 const path = require('path');
-
-// Path to site-content.json
-const CONTENT_FILE = path.join(process.cwd(), 'data', 'site-content.json');
+const https = require('https');
 
 // Helper to verify JWT token
 function verifyAuth(headers) {
@@ -12,15 +10,28 @@ function verifyAuth(headers) {
   }
   
   const token = authHeader.substring(7);
-  // Simple token verification - in production, use proper JWT
   const expectedToken = process.env.JWT_SECRET;
   return token === expectedToken;
 }
 
-// GET - Read content
-async function getContent() {
+// GET - Read content from deployed site
+async function getContent(event) {
   try {
-    const data = await fs.readFile(CONTENT_FILE, 'utf8');
+    // Get the site URL from Netlify environment or construct it
+    const siteUrl = process.env.URL || `https://${event.headers.host}`;
+    const contentUrl = `${siteUrl}/data/site-content.json`;
+    
+    console.log('Fetching content from:', contentUrl);
+    
+    // Fetch the content file from the deployed site
+    const response = await fetch(contentUrl);
+    
+    if (!response.ok) {
+      throw new Error(`Failed to fetch content: ${response.status}`);
+    }
+    
+    const data = await response.text();
+    
     return {
       statusCode: 200,
       headers: {
@@ -33,12 +44,19 @@ async function getContent() {
     console.error('Error reading content:', error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'Failed to read content' })
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      },
+      body: JSON.stringify({
+        error: 'Failed to read content',
+        message: error.message
+      })
     };
   }
 }
 
-// PUT - Update content
+// PUT - Update content (Note: This won't work on Netlify without Git integration)
 async function updateContent(body, headers) {
   // Verify authentication
   if (!verifyAuth(headers)) {
@@ -48,39 +66,19 @@ async function updateContent(body, headers) {
     };
   }
 
-  try {
-    // Parse and validate content
-    const content = JSON.parse(body);
-    
-    // Basic validation
-    if (!content.site || !content.languages || !content.content) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ error: 'Invalid content structure' })
-      };
-    }
-
-    // Write to file
-    await fs.writeFile(CONTENT_FILE, JSON.stringify(content, null, 2), 'utf8');
-
-    return {
-      statusCode: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      },
-      body: JSON.stringify({ 
-        success: true,
-        message: 'Content updated successfully' 
-      })
-    };
-  } catch (error) {
-    console.error('Error updating content:', error);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: 'Failed to update content' })
-    };
-  }
+  // On Netlify, we can't write to the filesystem
+  // This would require GitHub API integration or a database
+  return {
+    statusCode: 501,
+    headers: {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*'
+    },
+    body: JSON.stringify({
+      error: 'Content updates require GitHub integration',
+      message: 'Please use localStorage for now or implement GitHub API'
+    })
+  };
 }
 
 // Main handler
@@ -101,7 +99,7 @@ exports.handler = async (event, context) => {
   // Route based on HTTP method
   switch (event.httpMethod) {
     case 'GET':
-      return getContent();
+      return getContent(event);
     
     case 'PUT':
       return updateContent(event.body, event.headers);
