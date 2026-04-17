@@ -132,11 +132,26 @@
         // Check authentication before loading admin
         async function checkAuthentication() {
             try {
-                const response = await fetch('/api/check-auth');
+                // Get token from localStorage
+                const token = localStorage.getItem('authToken');
+                
+                if (!token) {
+                    // No token, redirect to login
+                    window.location.href = '/login.html';
+                    return false;
+                }
+                
+                // Verify token with backend
+                const response = await fetch('/.netlify/functions/check-auth', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 const data = await response.json();
                 
                 if (!data.authenticated) {
-                    // Redirect to login if not authenticated
+                    // Token invalid, clear it and redirect to login
+                    localStorage.removeItem('authToken');
                     window.location.href = '/login.html';
                     return false;
                 }
@@ -144,6 +159,7 @@
                 return true;
             } catch (error) {
                 console.error('Auth check failed:', error);
+                localStorage.removeItem('authToken');
                 window.location.href = '/login.html';
                 return false;
             }
@@ -193,14 +209,10 @@
         
         // Add logout functionality
         function logout() {
-            fetch('/api/logout', { method: 'POST' })
-                .then(() => {
-                    window.location.href = '/login.html';
-                })
-                .catch(error => {
-                    console.error('Logout error:', error);
-                    window.location.href = '/login.html';
-                });
+            // Clear the auth token from localStorage
+            localStorage.removeItem('authToken');
+            // Redirect to login
+            window.location.href = '/login.html';
         }
     </script>
 </body>
