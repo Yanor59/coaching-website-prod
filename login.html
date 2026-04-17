@@ -251,40 +251,22 @@
 
         <form id="login-form">
             <div class="form-group">
-                <label for="username">Identifiant</label>
-                <input 
-                    type="text" 
-                    id="username" 
-                    name="username" 
-                    class="form-control" 
-                    placeholder="Entrez votre identifiant"
-                    required
-                    autocomplete="username"
-                    autofocus
-                >
-            </div>
-
-            <div class="form-group">
                 <label for="password">Mot de passe</label>
                 <div class="password-toggle">
-                    <input 
-                        type="password" 
-                        id="password" 
-                        name="password" 
-                        class="form-control" 
-                        placeholder="Entrez votre mot de passe"
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        class="form-control"
+                        placeholder="Entrez le mot de passe admin"
                         required
                         autocomplete="current-password"
+                        autofocus
                     >
                     <button type="button" class="password-toggle-btn" id="toggle-password">
                         👁️
                     </button>
                 </div>
-            </div>
-
-            <div class="remember-me">
-                <input type="checkbox" id="remember" name="remember">
-                <label for="remember">Se souvenir de moi</label>
             </div>
 
             <button type="submit" class="btn-login" id="login-btn">
@@ -334,11 +316,10 @@
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
 
-            if (!username || !password) {
-                showError('Veuillez remplir tous les champs');
+            if (!password) {
+                showError('Veuillez entrer le mot de passe');
                 return;
             }
 
@@ -347,17 +328,20 @@
             loginBtn.innerHTML = '<span class="loading"></span>Connexion...';
 
             try {
-                const response = await fetch('/api/login', {
+                const response = await fetch('/.netlify/functions/auth', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ username, password })
+                    body: JSON.stringify({ password })
                 });
 
                 const data = await response.json();
 
-                if (response.ok && data.success) {
+                if (response.ok && data.authenticated) {
+                    // Store token in localStorage
+                    localStorage.setItem('authToken', data.token);
+                    
                     showSuccess('✅ Connexion réussie ! Redirection...');
                     
                     // Redirect to admin after 1 second
@@ -365,7 +349,7 @@
                         window.location.href = '/admin.html';
                     }, 1000);
                 } else {
-                    showError(data.error || 'Identifiant ou mot de passe incorrect');
+                    showError(data.error || 'Mot de passe incorrect');
                     loginBtn.disabled = false;
                     loginBtn.textContent = 'Se connecter';
                 }
@@ -380,7 +364,14 @@
         // Check if already logged in
         async function checkAuth() {
             try {
-                const response = await fetch('/api/check-auth');
+                const token = localStorage.getItem('authToken');
+                if (!token) return;
+
+                const response = await fetch('/.netlify/functions/check-auth', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 const data = await response.json();
                 
                 if (data.authenticated) {
