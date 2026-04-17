@@ -92,16 +92,16 @@ backToTopButton.addEventListener('click', () => {
 const contactForm = document.querySelector('.contact-form');
 
 if (contactForm) {
-    contactForm.addEventListener('submit', function(e) {
+    contactForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
         // Récupération des données du formulaire
         const formData = {
-            name: document.getElementById('name').value,
-            email: document.getElementById('email').value,
-            phone: document.getElementById('phone').value,
+            name: document.getElementById('name').value.trim(),
+            email: document.getElementById('email').value.trim(),
+            phone: document.getElementById('phone').value.trim(),
             service: document.getElementById('service').value,
-            message: document.getElementById('message').value,
+            message: document.getElementById('message').value.trim(),
             language: localStorage.getItem('preferredLanguage') || 'fr'
         };
         
@@ -118,27 +118,36 @@ if (contactForm) {
             return;
         }
         
-        // Simulation d'envoi (à remplacer par votre logique d'envoi réelle)
-        console.log('Données du formulaire:', formData);
-        
         // Afficher un loader
         const submitButton = contactForm.querySelector('button[type="submit"]');
         const originalText = submitButton.textContent;
         submitButton.textContent = 'Envoi en cours...';
         submitButton.disabled = true;
         
-        // Simuler un délai d'envoi
-        setTimeout(() => {
-            // Message de confirmation
+        try {
+            const response = await fetch('/.netlify/functions/contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.error || 'Erreur lors de l’envoi du message.');
+            }
+
             showNotification('success', 'Merci pour votre message ! Je vous répondrai dans les plus brefs délais.');
-            
-            // Réinitialisation du formulaire
             contactForm.reset();
-            
-            // Restaurer le bouton
+        } catch (error) {
+            console.error('Contact form error:', error);
+            showNotification('error', error.message || 'Impossible d’envoyer le message pour le moment.');
+        } finally {
             submitButton.textContent = originalText;
             submitButton.disabled = false;
-        }, 1500);
+        }
     });
 }
 
