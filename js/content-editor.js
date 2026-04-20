@@ -31,8 +31,10 @@ async function saveSiteContent(content) {
         const token = localStorage.getItem('authToken');
         
         if (!token) {
-            throw new Error('Not authenticated');
+            throw new Error('❌ Session expirée. Veuillez vous reconnecter.');
         }
+        
+        console.log('💾 Saving content to server...');
         
         const response = await fetch('/api/content', {
             method: 'PUT',
@@ -43,7 +45,27 @@ async function saveSiteContent(content) {
             body: JSON.stringify(content)
         });
         
-        if (!response.ok) throw new Error('Failed to save content');
+        if (!response.ok) {
+            // Try to get error details from response
+            let errorMessage = `Failed to save content (${response.status})`;
+            try {
+                const errorData = await response.json();
+                console.error('❌ Server error details:', errorData);
+                if (errorData.error) {
+                    errorMessage = `❌ ${errorData.error}`;
+                }
+                if (errorData.message) {
+                    errorMessage += `: ${errorData.message}`;
+                }
+            } catch (e) {
+                console.error('❌ Could not parse error response');
+            }
+            
+            if (response.status === 401) {
+                throw new Error('❌ Session expirée. Veuillez vous reconnecter.');
+            }
+            throw new Error(errorMessage);
+        }
         
         const result = await response.json();
         console.log('✅ Content saved:', result);
@@ -56,7 +78,7 @@ async function saveSiteContent(content) {
         console.error('❌ Error saving content:', error);
         const t = (key) => typeof adminI18n !== 'undefined' ? adminI18n.t(key) : key;
         if (typeof showNotification === 'function') {
-            showNotification(t('notifications.errorSaving'), 'error');
+            showNotification(error.message || t('notifications.errorSaving'), 'error');
         }
         return null;
     }

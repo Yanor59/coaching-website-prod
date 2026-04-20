@@ -1,7 +1,7 @@
-// Content management with GitHub API integration
-// Reads content from deployed site, writes via GitHub API
+// Content management with Netlify Blobs
+// Instant updates without GitHub commits or redeployment
 
-const https = require('https');
+const { getStore } = require('@netlify/blobs');
 
 // Helper to verify JWT token
 function verifyAuth(headers) {
@@ -15,38 +15,100 @@ function verifyAuth(headers) {
   return token === expectedToken;
 }
 
-// Helper to make HTTPS requests
-function httpsRequest(url, options = {}) {
-  return new Promise((resolve, reject) => {
-    const req = https.request(url, options, (res) => {
-      let data = '';
-      res.on('data', (chunk) => data += chunk);
-      res.on('end', () => {
-        if (res.statusCode >= 200 && res.statusCode < 300) {
-          resolve({ statusCode: res.statusCode, data });
-        } else {
-          reject(new Error(`HTTP ${res.statusCode}: ${data}`));
-        }
-      });
-    });
-    req.on('error', reject);
-    if (options.body) req.write(options.body);
-    req.end();
-  });
+// Helper to create backup
+async function createBackup(store, content) {
+  try {
+    const now = new Date();
+    const timestamp = now.toISOString();
+    const dateKey = now.toISOString().split('T')[0]; // YYYY-MM-DD
+    
+    // Create daily backup
+    const dailyBackupKey = `backup-daily-${dateKey}`;
+    await store.set(dailyBackupKey, JSON.stringify({
+      content: content,
+      timestamp: timestamp,
+      type: 'daily'
+    }));
+    
+    // Keep last 30 daily backups
+    const backupsList = await store.list({ prefix: 'backup-daily-' });
+    if (backupsList.blobs.length > 30) {
+      // Sort by key (date) and delete oldest
+      const sortedBackups = backupsList.blobs.sort((a, b) => a.key.localeCompare(b.key));
+      const toDelete = sortedBackups.slice(0, sortedBackups.length - 30);
+      for (const backup of toDelete) {
+        await store.delete(backup.key);
+      }
+    }
+    
+    // Create hourly backup (keep last 24 hours)
+    const hourKey = now.toISOString().substring(0, 13); // YYYY-MM-DDTHH
+    const hourlyBackupKey = `backup-hourly-${hourKey}`;
+    await store.set(hourlyBackupKey, JSON.stringify({
+      content: content,
+      timestamp: timestamp,
+      type: 'hourly'
+    }));
+    
+    // Keep last 24 hourly backups
+    const hourlyBackupsList = await store.list({ prefix: 'backup-hourly-' });
+    if (hourlyBackupsList.blobs.length > 24) {
+      const sortedHourly = hourlyBackupsList.blobs.sort((a, b) => a.key.localeCompare(b.key));
+      const toDeleteHourly = sortedHourly.slice(0, sortedHourly.length - 24);
+      for (const backup of toDeleteHourly) {
+        await store.delete(backup.key);
+      }
+    }
+    
+    console.log(`✅ Backups created: ${dailyBackupKey}, ${hourlyBackupKey}`);
+  } catch (error) {
+    console.error('⚠️ Backup creation failed (non-critical):', error);
+    // Don't fail the main operation if backup fails
+  }
 }
 
-// GET - Read content from deployed site
+// GET - Read content from Netlify Blobs
 async function getContent(event) {
   try {
-    // Get the site URL from Netlify environment
+    const store = getStore('site-data');
+    
+    console.log('📖 Fetching content from Netlify Blobs...');
+    
+    // Try to get content from Blobs
+    const contentStr = await store.get('site-content');
+    
+    if (contentStr) {
+      console.log('✅ Content loaded from Blobs');
+      return {
+        statusCode: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          'Cache-Control': 'no-cache, no-store, must-revalidate'
+        },
+        body: contentStr
+      };
+    }
+    
+    // If no content in Blobs, try to load from deployed file (first time migration)
+    console.log('📖 No content in Blobs, loading from deployed file...');
+    const https = require('https');
     const siteUrl = process.env.URL || `https://${event.headers.host}`;
     const contentUrl = `${siteUrl}/data/site-content.json`;
     
-    console.log('📖 Fetching content from:', contentUrl);
+    const response = await new Promise((resolve, reject) => {
+      https.get(contentUrl, (res) => {
+        let data = '';
+        res.on('data', (chunk) => data += chunk);
+        res.on('end', () => resolve(data));
+      }).on('error', reject);
+    });
     
-    // Fetch the content file from the deployed site
-    const response = await httpsRequest(contentUrl);
-    console.log('✅ Content loaded successfully');
+    // Save to Blobs for next time
+    await store.set('site-content', response);
+    await createBackup(store, JSON.parse(response));
+    
+    console.log('✅ Content migrated to Blobs');
     
     return {
       statusCode: 200,
@@ -54,7 +116,7 @@ async function getContent(event) {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*'
       },
-      body: response.data
+      body: response
     };
   } catch (error) {
     console.error('❌ Error reading content:', error);
@@ -72,7 +134,7 @@ async function getContent(event) {
   }
 }
 
-// PUT - Update content via GitHub API
+// PUT - Update content in Netlify Blobs
 async function updateContent(body, headers) {
   // Verify authentication
   if (!verifyAuth(headers)) {
@@ -102,68 +164,17 @@ async function updateContent(body, headers) {
       };
     }
 
-    // Get GitHub credentials from environment
-    const githubToken = process.env.GITHUB_TOKEN;
-    const githubOwner = process.env.GITHUB_OWNER;
-    const githubRepo = process.env.GITHUB_REPO;
-
-    if (!githubToken || !githubOwner || !githubRepo) {
-      console.error('❌ Missing GitHub configuration');
-      return {
-        statusCode: 500,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*'
-        },
-        body: JSON.stringify({ 
-          error: 'GitHub integration not configured',
-          message: 'Please add GITHUB_TOKEN, GITHUB_OWNER, and GITHUB_REPO to Netlify environment variables'
-        })
-      };
-    }
-
-    const filePath = 'data/site-content.json';
-    const apiUrl = `https://api.github.com/repos/${githubOwner}/${githubRepo}/contents/${filePath}`;
-
-    console.log('📝 Updating content via GitHub API:', apiUrl);
-
-    // Step 1: Get current file SHA (required for update)
-    const getResponse = await httpsRequest(apiUrl, {
-      method: 'GET',
-      headers: {
-        'Authorization': `token ${githubToken}`,
-        'Accept': 'application/vnd.github.v3+json',
-        'User-Agent': 'Netlify-Function'
-      }
-    });
-
-    const fileData = JSON.parse(getResponse.data);
-    const currentSha = fileData.sha;
-
-    // Step 2: Update file with new content
-    const contentBase64 = Buffer.from(JSON.stringify(content, null, 2)).toString('base64');
+    const store = getStore('site-data');
     
-    const updateBody = JSON.stringify({
-      message: 'Update content via admin interface',
-      content: contentBase64,
-      sha: currentSha,
-      branch: 'main'
-    });
-
-    const updateResponse = await httpsRequest(apiUrl, {
-      method: 'PUT',
-      headers: {
-        'Authorization': `token ${githubToken}`,
-        'Accept': 'application/vnd.github.v3+json',
-        'Content-Type': 'application/json',
-        'User-Agent': 'Netlify-Function',
-        'Content-Length': Buffer.byteLength(updateBody)
-      },
-      body: updateBody
-    });
-
-    const updateData = JSON.parse(updateResponse.data);
-    console.log('✅ Content updated successfully:', updateData.commit.sha);
+    console.log('💾 Saving content to Netlify Blobs...');
+    
+    // Save content
+    await store.set('site-content', JSON.stringify(content, null, 2));
+    
+    // Create backups
+    await createBackup(store, content);
+    
+    console.log('✅ Content saved successfully to Blobs');
 
     return {
       statusCode: 200,
@@ -171,10 +182,10 @@ async function updateContent(body, headers) {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*'
       },
-      body: JSON.stringify({ 
+      body: JSON.stringify({
         success: true,
-        message: 'Content updated successfully. Site will redeploy in 1-2 minutes.',
-        commit: updateData.commit.sha
+        message: 'Content updated successfully (instant update, no redeployment needed)',
+        timestamp: new Date().toISOString()
       })
     };
   } catch (error) {
@@ -185,9 +196,9 @@ async function updateContent(body, headers) {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*'
       },
-      body: JSON.stringify({ 
+      body: JSON.stringify({
         error: 'Failed to update content',
-        message: error.message 
+        message: error.message
       })
     };
   }
