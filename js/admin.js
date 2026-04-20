@@ -53,15 +53,26 @@ async function saveAdminContent() {
         throw new Error('❌ ERREUR: Données incomplètes. Rechargez la page et réessayez.');
     }
 
+    // Get JWT token from localStorage (stored during login)
+    const authToken = localStorage.getItem('authToken');
+    
+    if (!authToken) {
+        throw new Error('❌ ERREUR: Session expirée. Veuillez vous reconnecter.');
+    }
+
     const response = await fetch(ADMIN_API_URL, {
         method: 'PUT',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`
         },
         body: JSON.stringify(adminSiteContent)
     });
 
     if (!response.ok) {
+        if (response.status === 401) {
+            throw new Error('❌ ERREUR: Session expirée. Veuillez vous reconnecter.');
+        }
         throw new Error(`Erreur sauvegarde contenu (${response.status})`);
     }
 
@@ -89,11 +100,19 @@ async function uploadImageFile(file) {
         throw new Error(`Fichier trop volumineux: ${file.name}`);
     }
 
+    // Get JWT token from localStorage (stored during login)
+    const authToken = localStorage.getItem('authToken');
+    
+    if (!authToken) {
+        throw new Error('❌ ERREUR: Session expirée. Veuillez vous reconnecter.');
+    }
+
     const dataUrl = await readFileAsDataURL(file);
     const response = await fetch(ADMIN_UPLOAD_URL, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`
         },
         body: JSON.stringify({
             fileName: file.name,
@@ -103,11 +122,14 @@ async function uploadImageFile(file) {
     });
 
     if (!response.ok) {
+        if (response.status === 401) {
+            throw new Error('❌ ERREUR: Session expirée. Veuillez vous reconnecter.');
+        }
         throw new Error(`Erreur upload image (${response.status})`);
     }
 
     const payload = await response.json();
-    return payload.path;
+    return payload.path || payload.url;
 }
 
 function getSectionConfig(sectionKey) {

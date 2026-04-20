@@ -423,11 +423,10 @@ function openPhotoModal(index = -1) {
     }
     
     modal.classList.add('active');
-}
-
     
     // Setup browse photo button (must be after modal is shown)
     setupBrowsePhotoButton();
+}
 // ===== OPEN VIDEO MODAL =====
 function openVideoModal(index = -1) {
     const modal = document.getElementById('video-modal');
@@ -749,32 +748,69 @@ function setupBrowsePhotoButton() {
         newBrowseBtn.textContent = '⏳ Upload...';
         
         try {
-            // Create FormData
-            const formData = new FormData();
-            formData.append('image', file);
-            
-            // Upload to server
-            const response = await fetch('upload-image.php', {
-                method: 'POST',
-                body: formData
-            });
-            
-            if (!response.ok) {
-                throw new Error('Upload failed');
+            // Get auth token
+            const authToken = localStorage.getItem('authToken');
+            if (!authToken) {
+                throw new Error('Session expirée. Veuillez vous reconnecter.');
             }
             
-            const result = await response.json();
+            // Read file as data URL
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                try {
+                    // Upload to Cloudinary via Netlify function
+                    const response = await fetch('/.netlify/functions/upload-image', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${authToken}`
+                        },
+                        body: JSON.stringify({
+                            image: e.target.result,
+                            filename: file.name
+                        })
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Upload failed');
+                    }
+                    
+                    const result = await response.json();
+                    
+                    if (result.success && result.url) {
+                        // Set the uploaded image URL in the input
+                        document.getElementById('photo-url').value = result.url;
+                        showNotification('✅ Image uploadée avec succès!', 'success');
+                    } else {
+                        throw new Error(result.error || 'Upload failed');
+                    }
+                } catch (error) {
+                    console.error('Upload error:', error);
+                    showNotification('❌ Erreur lors de l\'upload: ' + error.message, 'error');
+                } finally {
+                    // Reset button state
+                    newBrowseBtn.disabled = false;
+                    newBrowseBtn.textContent = '📁 ' + (typeof adminI18n !== 'undefined' ? adminI18n.t('contentEditor.browseImage') : 'Parcourir');
+                    newFileInput.value = '';
+                }
+            };
             
-            if (result.success) {
-                // Set the uploaded image path in the input
-                document.getElementById('photo-url').value = result.path;
-                showNotification('✅ Image uploadée avec succès!', 'success');
-            } else {
-                throw new Error(result.error || 'Upload failed');
-            }
+            reader.onerror = () => {
+                showNotification('❌ Erreur lors de la lecture du fichier', 'error');
+                // Reset button state
+                newBrowseBtn.disabled = false;
+                newBrowseBtn.textContent = '📁 ' + (typeof adminI18n !== 'undefined' ? adminI18n.t('contentEditor.browseImage') : 'Parcourir');
+                newFileInput.value = '';
+            };
+            
+            reader.readAsDataURL(file);
         } catch (error) {
             console.error('Upload error:', error);
             showNotification('❌ Erreur lors de l\'upload: ' + error.message, 'error');
+            // Reset button state
+            newBrowseBtn.disabled = false;
+            newBrowseBtn.textContent = '📁 ' + (typeof adminI18n !== 'undefined' ? adminI18n.t('contentEditor.browseImage') : 'Parcourir');
+            newFileInput.value = '';
         } finally {
             // Reset button state
             newBrowseBtn.disabled = false;
