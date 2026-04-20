@@ -1,14 +1,33 @@
 // ===== SITE CONTENT LOADER =====
 
 (function () {
-    const CONTENT_URL = 'data/site-content.json';
+    // Load from API (Netlify Blobs) for instant updates
+    const CONTENT_URL = '/api/content';
+    const FALLBACK_URL = 'data/site-content.json';
 
     async function loadSiteContent() {
         try {
-            const response = await fetch(CONTENT_URL, { cache: 'no-store' });
+            // Try to load from API first (Netlify Blobs - instant updates)
+            console.log('📖 Loading content from API (Netlify Blobs)...');
+            const response = await fetch(CONTENT_URL, {
+                cache: 'no-store',
+                headers: {
+                    'Cache-Control': 'no-cache'
+                }
+            });
 
             if (!response.ok) {
-                throw new Error(`Impossible de charger ${CONTENT_URL} (${response.status})`);
+                console.warn('⚠️ API not available, falling back to static file');
+                // Fallback to static file if API fails
+                const fallbackResponse = await fetch(FALLBACK_URL, { cache: 'no-store' });
+                if (!fallbackResponse.ok) {
+                    throw new Error(`Failed to load content (${fallbackResponse.status})`);
+                }
+                const payload = await fallbackResponse.json();
+                window.siteContent = payload;
+                applySiteContent(localStorage.getItem('preferredLanguage') || 'fr');
+                console.log('✅ Site content loaded from static file (fallback)');
+                return;
             }
 
             const payload = await response.json();
@@ -27,9 +46,19 @@
                 }
             }));
 
-            console.log('✅ Site content loaded from JSON');
+            console.log('✅ Site content loaded from API (Netlify Blobs - instant updates enabled)');
         } catch (error) {
-            console.error('❌ Erreur lors du chargement du contenu JSON :', error);
+            console.error('❌ Error loading content:', error);
+            // Try fallback one more time
+            try {
+                const fallbackResponse = await fetch(FALLBACK_URL, { cache: 'no-store' });
+                const payload = await fallbackResponse.json();
+                window.siteContent = payload;
+                applySiteContent(localStorage.getItem('preferredLanguage') || 'fr');
+                console.log('✅ Site content loaded from static file (fallback after error)');
+            } catch (fallbackError) {
+                console.error('❌ Fallback also failed:', fallbackError);
+            }
         }
     }
 
