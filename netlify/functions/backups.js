@@ -21,7 +21,7 @@ async function listBackups(event) {
     // Get store with manual configuration for Netlify environment
     const store = getStore({
       name: 'site-data',
-      siteID: process.env.SITE_ID || event.headers['x-nf-site-id'],
+      siteID: process.env.NETLIFY_SITE_ID || event.headers['x-nf-site-id'],
       token: process.env.NETLIFY_TOKEN || process.env.NETLIFY_AUTH_TOKEN
     });
     
@@ -110,7 +110,7 @@ async function restoreBackup(body, event) {
     // Get store with manual configuration for Netlify environment
     const store = getStore({
       name: 'site-data',
-      siteID: process.env.SITE_ID || event.headers['x-nf-site-id'],
+      siteID: process.env.NETLIFY_SITE_ID || event.headers['x-nf-site-id'],
       token: process.env.NETLIFY_TOKEN || process.env.NETLIFY_AUTH_TOKEN
     });
     
