@@ -8,8 +8,46 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Hide content until authentication is verified */
+        body.admin-body {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        body.admin-body.authenticated {
+            opacity: 1;
+        }
+        /* Loading indicator */
+        .auth-loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 10000;
+        }
+        .auth-loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body class="admin-body">
+    <!-- Authentication loading indicator -->
+    <div class="auth-loading" id="authLoading">
+        <div class="auth-loading-spinner"></div>
+        <p>Vérification de l'authentification...</p>
+    </div>
+    
     <!-- Language Selector -->
     <div class="admin-language-selector">
         <button class="lang-toggle-btn" id="langToggle" title="Changer de langue">
@@ -168,6 +206,13 @@
         // Check auth immediately
         checkAuthentication().then(authenticated => {
             if (authenticated) {
+                // Hide loading indicator and show content
+                const authLoading = document.getElementById('authLoading');
+                if (authLoading) {
+                    authLoading.style.display = 'none';
+                }
+                document.body.classList.add('authenticated');
+                
                 // Load admin scripts only if authenticated
                 // Load them sequentially to ensure proper initialization order
                 const scripts = [

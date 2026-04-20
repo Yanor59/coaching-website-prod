@@ -60,6 +60,8 @@ async function saveAdminContent() {
         throw new Error('❌ ERREUR: Session expirée. Veuillez vous reconnecter.');
     }
 
+    console.log('💾 Saving content to server...');
+
     const response = await fetch(ADMIN_API_URL, {
         method: 'PUT',
         headers: {
@@ -70,13 +72,30 @@ async function saveAdminContent() {
     });
 
     if (!response.ok) {
+        // Try to get error details from response
+        let errorMessage = `Erreur sauvegarde contenu (${response.status})`;
+        try {
+            const errorData = await response.json();
+            console.error('❌ Server error details:', errorData);
+            if (errorData.error) {
+                errorMessage = `❌ ${errorData.error}`;
+            }
+            if (errorData.message) {
+                errorMessage += `: ${errorData.message}`;
+            }
+        } catch (e) {
+            console.error('❌ Could not parse error response');
+        }
+        
         if (response.status === 401) {
             throw new Error('❌ ERREUR: Session expirée. Veuillez vous reconnecter.');
         }
-        throw new Error(`Erreur sauvegarde contenu (${response.status})`);
+        throw new Error(errorMessage);
     }
 
-    return response.json();
+    const result = await response.json();
+    console.log('✅ Content saved successfully:', result);
+    return result;
 }
 
 function readFileAsDataURL(file) {
