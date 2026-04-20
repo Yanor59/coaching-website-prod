@@ -70,7 +70,12 @@ async function createBackup(store, content) {
 // GET - Read content from Netlify Blobs
 async function getContent(event) {
   try {
-    const store = getStore('site-data');
+    // Get store with manual configuration for Netlify environment
+    const store = getStore({
+      name: 'site-data',
+      siteID: process.env.SITE_ID || event.headers['x-nf-site-id'],
+      token: process.env.NETLIFY_TOKEN || process.env.NETLIFY_AUTH_TOKEN
+    });
     
     console.log('📖 Fetching content from Netlify Blobs...');
     
@@ -164,7 +169,12 @@ async function updateContent(body, headers) {
       };
     }
 
-    const store = getStore('site-data');
+    // Get store with manual configuration for Netlify environment
+    const store = getStore({
+      name: 'site-data',
+      siteID: process.env.SITE_ID || headers['x-nf-site-id'],
+      token: process.env.NETLIFY_TOKEN || process.env.NETLIFY_AUTH_TOKEN
+    });
     
     console.log('💾 Saving content to Netlify Blobs...');
     

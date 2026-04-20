@@ -16,9 +16,14 @@ function verifyAuth(headers) {
 }
 
 // GET - List all backups
-async function listBackups() {
+async function listBackups(event) {
   try {
-    const store = getStore('site-data');
+    // Get store with manual configuration for Netlify environment
+    const store = getStore({
+      name: 'site-data',
+      siteID: process.env.SITE_ID || event.headers['x-nf-site-id'],
+      token: process.env.NETLIFY_TOKEN || process.env.NETLIFY_AUTH_TOKEN
+    });
     
     console.log('📋 Listing backups...');
     
@@ -87,7 +92,7 @@ async function listBackups() {
 }
 
 // POST - Restore a backup
-async function restoreBackup(body) {
+async function restoreBackup(body, event) {
   try {
     const { backupKey } = JSON.parse(body);
     
@@ -102,7 +107,12 @@ async function restoreBackup(body) {
       };
     }
     
-    const store = getStore('site-data');
+    // Get store with manual configuration for Netlify environment
+    const store = getStore({
+      name: 'site-data',
+      siteID: process.env.SITE_ID || event.headers['x-nf-site-id'],
+      token: process.env.NETLIFY_TOKEN || process.env.NETLIFY_AUTH_TOKEN
+    });
     
     console.log(`🔄 Restoring backup: ${backupKey}`);
     
@@ -197,10 +207,10 @@ exports.handler = async (event, context) => {
   // Route based on HTTP method
   switch (event.httpMethod) {
     case 'GET':
-      return listBackups();
+      return listBackups(event);
     
     case 'POST':
-      return restoreBackup(event.body);
+      return restoreBackup(event.body, event);
     
     default:
       return {
