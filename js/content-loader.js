@@ -469,16 +469,57 @@
                 applyText('.service-card:nth-of-type(3) .service-price', content.services.online.price || '');
             }
         }
+        
+        // Apply Partners section headers
+        if (content.partners) {
+            applyText('.partners .section-tag', content.partners.tag || '');
+            applyText('.partners .section-title', content.partners.title || '');
+            applyText('.partners .section-description', content.partners.description || '');
+        }
+        
+        // Apply Testimonials section headers
+        if (content.testimonials) {
+            applyText('.testimonials .section-tag', content.testimonials.tag || '');
+            applyText('.testimonials .section-title', content.testimonials.title || '');
+        }
+        
+        // Apply Pricing section headers
+        if (content.pricing) {
+            applyText('.pricing .section-tag', content.pricing.tag || '');
+            applyText('.pricing .section-title', content.pricing.title || '');
+            applyText('.pricing .section-description', content.pricing.description || '');
+        }
+        
+        // Apply Contact section
+        if (content.contact) {
+            applyText('.contact .section-tag', content.contact.tag || '');
+            applyText('.contact .section-title', content.contact.title || '');
+            applyText('.contact .section-description', content.contact.description || '');
+            applyText('.contact-info .info-card:nth-child(1) h3', content.contact.locationLabel || '');
+            applyText('.contact-info .info-card:nth-child(1) p', content.contact.locationValue || '');
+            applyText('.contact-info .info-card:nth-child(2) h3', content.contact.emailLabel || '');
+            applyText('.contact-info .info-card:nth-child(2) p', content.contact.emailValue || '');
+            applyText('.contact-info .info-card:nth-child(3) h3', content.contact.phoneLabel || '');
+            applyText('.contact-info .info-card:nth-child(3) p', content.contact.phoneValue || '');
+            applyText('.contact-info .info-card:nth-child(4) h3', content.contact.scheduleLabel || '');
+            applyHTML('.contact-info .info-card:nth-child(4) p', content.contact.schedule || '');
+        }
+        
+        // Apply Footer section
+        if (content.footer) {
+            applyText('.footer .footer-about h3', content.footer.aboutTitle || '');
+            applyText('.footer .footer-about p', content.footer.aboutText || '');
+            applyText('.footer .footer-links h4', content.footer.linksTitle || '');
+            applyText('.footer .footer-contact h4', content.footer.contactTitle || '');
+            applyText('.footer .footer-bottom p', content.footer.copyright || '');
+        }
+        
+        // Render dynamic content (items that can be added/removed)
         renderPartners(content.partners);
         renderTestimonials(content.testimonials);
         renderPricing(content.pricing);
         renderEvents(content.events, currentLang);
         renderGallery(content.gallery);
-
-        applyText('.contact-info .info-card:nth-child(1) p', (content.contact && content.contact.locationValue) || '');
-        applyText('.contact-info .info-card:nth-child(2) p', (content.contact && content.contact.emailValue) || '');
-        applyText('.contact-info .info-card:nth-child(3) p', (content.contact && content.contact.phoneValue) || '');
-        applyHTML('.contact-info .info-card:nth-child(4) p', (content.contact && content.contact.schedule) || '');
 
         // Don't call changeLanguage anymore - it overwrites our Netlify Blobs content
         // All content is now managed by applySiteContent from Netlify Blobs
