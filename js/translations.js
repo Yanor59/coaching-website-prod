@@ -660,25 +660,31 @@ function changeLanguage(lang) {
     // Sauvegarder la langue choisie
     localStorage.setItem('preferredLanguage', lang);
     
-    // Mettre à jour tous les éléments avec data-i18n
-    document.querySelectorAll('[data-i18n]').forEach(element => {
-        const key = element.getAttribute('data-i18n');
-        const translation = getNestedTranslation(translations[lang], key);
+    // Instead of updating data-i18n elements directly, trigger content reload from Netlify Blobs
+    // This ensures content comes from the CMS, not from static translations
+    if (window.siteContent && typeof window.applySiteContent === 'function') {
+        window.applySiteContent(lang);
+    } else {
+        // Fallback: update data-i18n elements with static translations (for navigation, etc.)
+        document.querySelectorAll('[data-i18n]').forEach(element => {
+            const key = element.getAttribute('data-i18n');
+            const translation = getNestedTranslation(translations[lang], key);
+            
+            if (translation) {
+                element.textContent = translation;
+            }
+        });
         
-        if (translation) {
-            element.textContent = translation;
-        }
-    });
-    
-    // Mettre à jour les placeholders
-    document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
-        const key = element.getAttribute('data-i18n-placeholder');
-        const translation = getNestedTranslation(translations[lang], key);
-        
-        if (translation) {
-            element.placeholder = translation;
-        }
-    });
+        // Mettre à jour les placeholders
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+            const key = element.getAttribute('data-i18n-placeholder');
+            const translation = getNestedTranslation(translations[lang], key);
+            
+            if (translation) {
+                element.placeholder = translation;
+            }
+        });
+    }
     
     // Mettre à jour les boutons de langue
     document.querySelectorAll('.lang-btn').forEach(btn => {
@@ -699,9 +705,9 @@ function getNestedTranslation(obj, path) {
 
 // Initialisation au chargement de la page
 document.addEventListener('DOMContentLoaded', () => {
-    // Récupérer la langue sauvegardée ou utiliser le français par défaut
-    const savedLang = localStorage.getItem('preferredLanguage') || 'fr';
-    changeLanguage(savedLang);
+    // Don't call changeLanguage automatically - content is now managed by content-loader.js from Netlify Blobs
+    // const savedLang = localStorage.getItem('preferredLanguage') || 'fr';
+    // changeLanguage(savedLang);
     
     // Toggle dropdown
     const langToggle = document.getElementById('publicLangToggle');

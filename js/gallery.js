@@ -477,8 +477,8 @@ class VideoPlayer {
 
 // ===== INITIALIZATION =====
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialiser la galerie
-    const gallery = new Gallery();
+    // Initialiser la galerie et la stocker globalement
+    window.galleryInstance = new Gallery();
     console.log('✅ Gallery initialized');
 
     // Initialiser le lecteur vidéo

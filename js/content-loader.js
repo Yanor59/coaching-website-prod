@@ -426,9 +426,49 @@
             applyText('.hero .btn-secondary', content.hero.discover || '');
         }
 
-        applyText('.badge-number', (content.about && content.about.experienceValue) || '5+');
+        // Apply About section content
+        if (content.about) {
+            applyText('.about .section-tag', content.about.tag || '');
+            applyText('.about .section-title', content.about.title || '');
+            applyText('.about .section-subtitle', content.about.subtitle || '');
+            applyText('.badge-number', content.about.experienceValue || '5+');
+            applyText('.badge-label', content.about.experience || '');
+            applyText('.about-text p:nth-of-type(1)', content.about.bio1 || '');
+            applyText('.about-text p:nth-of-type(2)', content.about.bio2 || '');
+            applyText('.cert-item:nth-of-type(1)', content.about.cert1 || '');
+            applyText('.cert-item:nth-of-type(2)', content.about.cert2 || '');
+            applyText('.cert-item:nth-of-type(3)', content.about.cert3 || '');
+        }
 
         renderAboutImage(content.about);
+        
+        // Apply Services section content
+        if (content.services) {
+            applyText('.services .section-tag', content.services.tag || '');
+            applyText('.services .section-title', content.services.title || '');
+            applyText('.services .section-description', content.services.description || '');
+            
+            // Individual service
+            if (content.services.individual) {
+                applyText('.service-card:nth-of-type(1) h3', content.services.individual.title || '');
+                applyText('.service-card:nth-of-type(1) p', content.services.individual.desc || '');
+                applyText('.service-card:nth-of-type(1) .service-price', content.services.individual.price || '');
+            }
+            
+            // Group service
+            if (content.services.group) {
+                applyText('.service-card:nth-of-type(2) h3', content.services.group.title || '');
+                applyText('.service-card:nth-of-type(2) p', content.services.group.desc || '');
+                applyText('.service-card:nth-of-type(2) .service-price', content.services.group.price || '');
+            }
+            
+            // Online service
+            if (content.services.online) {
+                applyText('.service-card:nth-of-type(3) h3', content.services.online.title || '');
+                applyText('.service-card:nth-of-type(3) p', content.services.online.desc || '');
+                applyText('.service-card:nth-of-type(3) .service-price', content.services.online.price || '');
+            }
+        }
         renderPartners(content.partners);
         renderTestimonials(content.testimonials);
         renderPricing(content.pricing);
@@ -440,12 +480,8 @@
         applyText('.contact-info .info-card:nth-child(3) p', (content.contact && content.contact.phoneValue) || '');
         applyHTML('.contact-info .info-card:nth-child(4) p', (content.contact && content.contact.schedule) || '');
 
-        if (typeof window.changeLanguage === 'function') {
-            const previousApplySiteContent = window.applySiteContent;
-            window.applySiteContent = null;
-            window.changeLanguage(currentLang);
-            window.applySiteContent = previousApplySiteContent;
-        }
+        // Don't call changeLanguage anymore - it overwrites our Netlify Blobs content
+        // All content is now managed by applySiteContent from Netlify Blobs
     }
 
     function escapeHtml(value) {
