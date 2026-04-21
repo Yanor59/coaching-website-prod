@@ -1,7 +1,7 @@
 // ===== ADMIN INTERFACE JAVASCRIPT =====
 
-const ADMIN_API_URL = '/api/content';
-const ADMIN_UPLOAD_URL = '/api/upload';
+const ADMIN_API_URL = '/.netlify/functions/content';
+const ADMIN_UPLOAD_URL = '/.netlify/functions/upload-image';
 let adminSiteContent = null;
 
 // ===== SIDEBAR TOGGLE (Mobile) =====
@@ -134,9 +134,8 @@ async function uploadImageFile(file) {
             'Authorization': `Bearer ${authToken}`
         },
         body: JSON.stringify({
-            fileName: file.name,
-            mimeType: file.type,
-            dataUrl
+            image: dataUrl,
+            filename: file.name
         })
     });
 
@@ -148,7 +147,7 @@ async function uploadImageFile(file) {
     }
 
     const payload = await response.json();
-    return payload.path || payload.url;
+    return payload.url || payload.path;
 }
 
 function getSectionConfig(sectionKey) {

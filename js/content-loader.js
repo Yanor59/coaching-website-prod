@@ -2,7 +2,7 @@
 
 (function () {
     // Load from API (Netlify Blobs) for instant updates
-    const CONTENT_URL = '/api/content';
+    const CONTENT_URL = '/.netlify/functions/content';
     const FALLBACK_URL = 'data/site-content.json';
 
     async function loadSiteContent() {

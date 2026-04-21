@@ -23,28 +23,37 @@ async function uploadImageFile(file, fieldPath) {
             const t = (key) => typeof adminI18n !== 'undefined' ? adminI18n.t(key) : key;
             
             try {
+                // Get auth token
+                const authToken = localStorage.getItem('authToken');
+                if (!authToken) {
+                    throw new Error('Session expirée. Veuillez vous reconnecter.');
+                }
+                
                 // Show loading
                 if (typeof showNotification === 'function') {
                     showNotification(t('notifications.uploadInProgress'), 'info');
                 }
                 
-                // Upload to server
-                const response = await fetch('/api/upload', {
+                // Upload to server (Cloudinary via Netlify function)
+                const response = await fetch('/.netlify/functions/upload-image', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
                     },
                     body: JSON.stringify({
-                        dataUrl: e.target.result,
-                        mimeType: file.type,
-                        fileName: file.name
+                        image: e.target.result,
+                        filename: file.name
                     })
                 });
                 
-                if (!response.ok) throw new Error('Upload failed');
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.error || 'Upload failed');
+                }
                 
                 const result = await response.json();
-                const imagePath = result.path || `images/${file.name}`;
+                const imagePath = result.url || result.path || `images/${file.name}`;
                 
                 // Update the field
                 const textInput = document.getElementById(fieldPath);

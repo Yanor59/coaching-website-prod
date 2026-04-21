@@ -9,7 +9,7 @@ let currentLang = 'fr';
 // ===== LOAD CONTENT FROM API =====
 async function loadSiteContent() {
     try {
-        const response = await fetch('/api/content');
+        const response = await fetch('/.netlify/functions/content');
         if (!response.ok) throw new Error('Failed to load content');
         siteContent = await response.json();
         console.log('✅ Content loaded:', siteContent);
@@ -36,7 +36,7 @@ async function saveSiteContent(content) {
         
         console.log('💾 Saving content to server...');
         
-        const response = await fetch('/api/content', {
+        const response = await fetch('/.netlify/functions/content', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -817,7 +817,7 @@ async function uploadImageFile(file, fieldPath) {
         }
         
         // Upload to server
-        const response = await fetch('/api/upload', {
+        const response = await fetch('/.netlify/functions/upload-image', {
             method: 'POST',
             body: formData
         });
