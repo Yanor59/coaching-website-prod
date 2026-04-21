@@ -417,6 +417,15 @@
         applyText('.logo h1', (payload.site && payload.site.name) || 'Alina Coaching');
         applyText('.logo .location', (payload.site && payload.site.location) || 'Bratislava');
 
+        // Apply Hero section content
+        if (content.hero) {
+            applyText('.hero-title', content.hero.title || '');
+            applyText('.hero-subtitle', content.hero.subtitle || '');
+            applyText('.hero-description', content.hero.description || '');
+            applyText('.hero .btn-primary', content.hero.cta || '');
+            applyText('.hero .btn-secondary', content.hero.discover || '');
+        }
+
         applyText('.badge-number', (content.about && content.about.experienceValue) || '5+');
 
         renderAboutImage(content.about);

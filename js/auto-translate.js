@@ -4,7 +4,7 @@
 
 class AutoTranslate {
     constructor() {
-        this.apiEndpoint = '/api/translate';
+        this.apiEndpoint = '/.netlify/functions/translate';
         this.supportedLanguages = {
             'fr': 'French',
             'en': 'English',
@@ -31,10 +31,17 @@ class AutoTranslate {
         }
 
         try {
+            // Get auth token
+            const authToken = localStorage.getItem('authToken');
+            if (!authToken) {
+                throw new Error('Session expirée. Veuillez vous reconnecter.');
+            }
+            
             const response = await fetch(this.apiEndpoint, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`
                 },
                 body: JSON.stringify({
                     text,
