@@ -521,8 +521,11 @@
         renderEvents(content.events, currentLang);
         renderGallery(content.gallery);
 
-        // Don't call changeLanguage anymore - it overwrites our Netlify Blobs content
-        // All content is now managed by applySiteContent from Netlify Blobs
+        // Call changeLanguage to update data-i18n elements (nav, form labels, etc.)
+        // but only for static UI elements that are not managed by Netlify Blobs
+        if (typeof window.changeLanguage === 'function') {
+            window.changeLanguage(currentLang);
+        }
     }
 
     function escapeHtml(value) {

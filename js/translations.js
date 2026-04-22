@@ -88,6 +88,7 @@ const translations = {
         testimonials: {
             tag: "Témoignages",
             title: "Ce Que Disent Mes Clientes",
+            submitButton: "Laissez votre témoignage",
             client: "Cliente depuis",
             text1: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Alina est une coach exceptionnelle qui m'a aidée à atteindre mes objectifs. Je me sens plus forte et confiante!",
             text2: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Programme parfaitement adapté à mes besoins. Les résultats sont visibles et je me sens en pleine forme!",
@@ -250,6 +251,7 @@ const translations = {
         testimonials: {
             tag: "Testimonials",
             title: "What My Clients Say",
+            submitButton: "Leave your testimonial",
             client: "Client for",
             text1: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Alina is an exceptional coach who helped me achieve my goals. I feel stronger and more confident!",
             text2: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Program perfectly adapted to my needs. The results are visible and I feel great!",
@@ -412,6 +414,7 @@ const translations = {
         testimonials: {
             tag: "Referencie",
             title: "Čo Hovoria Moje Klientky",
+            submitButton: "Zanechajte referenciu",
             client: "Klientka už",
             text1: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Alina je výnimočná trénerka, ktorá mi pomohla dosiahnuť moje ciele. Cítim sa silnejšia a sebavedomejšia!",
             text2: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Program perfektne prispôsobený mojim potrebám. Výsledky sú viditeľné a cítim sa skvelo!",
@@ -574,6 +577,7 @@ const translations = {
         testimonials: {
             tag: "Відгуки",
             title: "Що Кажуть Мої Клієнтки",
+            submitButton: "Залишити відгук",
             client: "Клієнтка вже",
             text1: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Аліна - виняткова тренерка, яка допомогла мені досягти моїх цілей. Я відчуваю себе сильнішою та впевненішою!",
             text2: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Програма ідеально адаптована до моїх потреб. Результати видимі, і я відчуваю себе чудово!",
@@ -660,31 +664,30 @@ function changeLanguage(lang) {
     // Sauvegarder la langue choisie
     localStorage.setItem('preferredLanguage', lang);
     
-    // Instead of updating data-i18n elements directly, trigger content reload from Netlify Blobs
-    // This ensures content comes from the CMS, not from static translations
-    if (window.siteContent && typeof window.applySiteContent === 'function') {
-        window.applySiteContent(lang);
-    } else {
-        // Fallback: update data-i18n elements with static translations (for navigation, etc.)
-        document.querySelectorAll('[data-i18n]').forEach(element => {
-            const key = element.getAttribute('data-i18n');
-            const translation = getNestedTranslation(translations[lang], key);
-            
-            if (translation) {
+    // Always update data-i18n elements with static translations (for navigation, form labels, etc.)
+    document.querySelectorAll('[data-i18n]').forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        const translation = getNestedTranslation(translations[lang], key);
+        
+        if (translation) {
+            // Use innerHTML for translations that may contain HTML (like <br>)
+            if (translation.includes('<br>') || translation.includes('<')) {
+                element.innerHTML = translation;
+            } else {
                 element.textContent = translation;
             }
-        });
+        }
+    });
+    
+    // Mettre à jour les placeholders
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+        const key = element.getAttribute('data-i18n-placeholder');
+        const translation = getNestedTranslation(translations[lang], key);
         
-        // Mettre à jour les placeholders
-        document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
-            const key = element.getAttribute('data-i18n-placeholder');
-            const translation = getNestedTranslation(translations[lang], key);
-            
-            if (translation) {
-                element.placeholder = translation;
-            }
-        });
-    }
+        if (translation) {
+            element.placeholder = translation;
+        }
+    });
     
     // Mettre à jour les boutons de langue
     document.querySelectorAll('.lang-btn').forEach(btn => {

@@ -4,6 +4,31 @@ const ADMIN_API_URL = '/.netlify/functions/content';
 const ADMIN_UPLOAD_URL = '/.netlify/functions/upload-image';
 let adminSiteContent = null;
 
+// ===== LANGUAGE SELECTOR TOGGLE =====
+const langToggle = document.getElementById('langToggle');
+const langDropdown = document.getElementById('langDropdown');
+
+if (langToggle && langDropdown) {
+    langToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        langDropdown.classList.toggle('active');
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!langToggle.contains(e.target) && !langDropdown.contains(e.target)) {
+            langDropdown.classList.remove('active');
+        }
+    });
+    
+    // Close dropdown after selecting a language
+    document.querySelectorAll('.admin-lang-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            langDropdown.classList.remove('active');
+        });
+    });
+}
+
 // ===== SIDEBAR TOGGLE (Mobile) =====
 const sidebarToggle = document.querySelector('.sidebar-toggle');
 const sidebar = document.querySelector('.admin-sidebar');
