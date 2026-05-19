@@ -484,7 +484,15 @@
         }
         
         // Render legal links
-        const legalLinksContainer = document.querySelector('.footer-section:has(h4[data-i18n="footer.legal"]) .footer-links');
+        const footerSections = document.querySelectorAll('.footer-section');
+        let legalLinksContainer = null;
+        footerSections.forEach(section => {
+            const heading = section.querySelector('h4[data-i18n="footer.legal"]');
+            if (heading) {
+                legalLinksContainer = section.querySelector('.footer-links');
+            }
+        });
+        
         if (legalLinksContainer && siteData.legal) {
             const legal = siteData.legal;
             const legalLinks = [];

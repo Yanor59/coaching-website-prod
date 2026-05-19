@@ -282,6 +282,9 @@
             <div class="section-header">
                 <span class="section-tag" data-i18n="testimonials.tag">Témoignages</span>
                 <h2 class="section-title" data-i18n="testimonials.title">Ce Que Disent Mes Clientes</h2>
+                <button id="openTestimonialForm" class="btn btn-primary" style="margin-top: 1rem;">
+                    <span data-i18n="testimonials.submitButton">Laissez votre témoignage</span>
+                </button>
             </div>
             <div class="testimonials-grid">
                 <div class="testimonial-card">
@@ -504,6 +507,55 @@
     </footer>
 
     <!-- Back to Top Button -->
+    <!-- Testimonial Submission Modal -->
+    <div id="testimonialModal" class="testimonial-modal">
+        <div class="modal-content">
+            <span class="close-testimonial-modal">&times;</span>
+            <h2 data-i18n="testimonials.submitButton">Laissez votre témoignage</h2>
+            <form id="testimonialForm">
+                <div class="form-group">
+                    <label for="testimonialName">
+                        <span data-i18n="testimonials.form.name">Votre nom</span> *
+                    </label>
+                    <input type="text" id="testimonialName" name="name" required maxlength="100">
+                </div>
+
+                <div class="form-group">
+                    <label for="testimonialDuration">
+                        <span data-i18n="testimonials.form.duration">Cliente depuis</span>
+                    </label>
+                    <input type="text" id="testimonialDuration" name="duration" maxlength="50" placeholder="Ex: 6 mois">
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <span data-i18n="testimonials.form.rating">Note</span> *
+                    </label>
+                    <div class="star-rating">
+                        <span class="star active">★</span>
+                        <span class="star active">★</span>
+                        <span class="star active">★</span>
+                        <span class="star active">★</span>
+                        <span class="star active">★</span>
+                    </div>
+                    <input type="hidden" id="testimonialRating" name="rating" value="5">
+                </div>
+
+                <div class="form-group">
+                    <label for="testimonialText">
+                        <span data-i18n="testimonials.form.text">Votre témoignage</span> *
+                    </label>
+                    <textarea id="testimonialText" name="text" required rows="5" maxlength="1000"></textarea>
+                    <small data-i18n="testimonials.form.note">Votre témoignage sera publié après modération</small>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <span data-i18n="testimonials.form.submit">Envoyer</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
     <button class="back-to-top" aria-label="Retour en haut">↑</button>
 
     <script src="js/translations.js"></script>
@@ -512,5 +564,6 @@
     <script src="js/gallery.js"></script>
     <script src="js/lightbox.js"></script>
     <script src="js/api-service.js"></script>
+    <script src="js/testimonial-form.js"></script>
 </body>
 </html>

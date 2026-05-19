@@ -664,20 +664,49 @@ function changeLanguage(lang) {
     // Sauvegarder la langue choisie
     localStorage.setItem('preferredLanguage', lang);
     
-    // Always update data-i18n elements with static translations (for navigation, form labels, etc.)
-    document.querySelectorAll('[data-i18n]').forEach(element => {
-        const key = element.getAttribute('data-i18n');
-        const translation = getNestedTranslation(translations[lang], key);
-        
-        if (translation) {
-            // Use innerHTML for translations that may contain HTML (like <br>)
-            if (translation.includes('<br>') || translation.includes('<')) {
-                element.innerHTML = translation;
-            } else {
-                element.textContent = translation;
+    // Use Netlify Blobs content if available, otherwise fall back to static translations
+    const useBlobs = window.siteContent && window.siteContent.content && window.siteContent.content[lang];
+    
+    if (useBlobs) {
+        // Content is managed by content-loader.js from Netlify Blobs
+        // Only update navigation and form labels (not content sections)
+        document.querySelectorAll('[data-i18n]').forEach(element => {
+            const key = element.getAttribute('data-i18n');
+            
+            // Skip content sections - they are managed by content-loader.js
+            if (key.startsWith('hero.') || key.startsWith('about.') || key.startsWith('services.') ||
+                key.startsWith('contact.') || key.startsWith('pricing.') || key.startsWith('testimonials.') ||
+                key.startsWith('partners.') || key.startsWith('events.') || key.startsWith('gallery.')) {
+                return; // Skip - managed by Netlify Blobs
             }
-        }
-    });
+            
+            const translation = getNestedTranslation(translations[lang], key);
+            
+            if (translation) {
+                // Use innerHTML for translations that may contain HTML (like <br>)
+                if (translation.includes('<br>') || translation.includes('<')) {
+                    element.innerHTML = translation;
+                } else {
+                    element.textContent = translation;
+                }
+            }
+        });
+    } else {
+        // Fallback to static translations if Blobs not available
+        document.querySelectorAll('[data-i18n]').forEach(element => {
+            const key = element.getAttribute('data-i18n');
+            const translation = getNestedTranslation(translations[lang], key);
+            
+            if (translation) {
+                // Use innerHTML for translations that may contain HTML (like <br>)
+                if (translation.includes('<br>') || translation.includes('<')) {
+                    element.innerHTML = translation;
+                } else {
+                    element.textContent = translation;
+                }
+            }
+        });
+    }
     
     // Mettre à jour les placeholders
     document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
