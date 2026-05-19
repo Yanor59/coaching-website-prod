@@ -468,8 +468,20 @@ function bindEditorEvents() {
             saveBtn.disabled = true;
             saveBtn.textContent = `⏳ ${t('contentEditor.saving')}`;
             await saveSiteContent(siteContent);
+            
+            // Reload content from server to ensure we have the latest version
+            await loadSiteContent();
+            
+            // Re-render the current section with the fresh data
+            renderEditorFields(currentSection, currentLang);
+            
             saveBtn.disabled = false;
             saveBtn.textContent = `💾 ${t('contentEditor.saveButton')}`;
+            
+            // Show success notification
+            if (typeof showNotification === 'function') {
+                showNotification(t('notifications.contentSaved'), 'success');
+            }
         });
     }
     

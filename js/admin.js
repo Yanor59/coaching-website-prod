@@ -378,6 +378,10 @@ navItems.forEach(item => {
             if (typeof renderGalleryManager === 'function') {
                 renderGalleryManager();
             }
+        } else if (section === 'settings') {
+            if (typeof renderSettingsManager === 'function') {
+                renderSettingsManager();
+            }
         } else if (section === 'dashboard') {
             // Reload dashboard
             location.reload();

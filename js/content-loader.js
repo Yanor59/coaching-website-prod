@@ -8,18 +8,29 @@
     async function loadSiteContent() {
         try {
             // Try to load from API first (Netlify Blobs - instant updates)
+            // Add timestamp to force fresh data (cache-busting)
+            const timestamp = Date.now();
+            const urlWithCacheBust = `${CONTENT_URL}?v=${timestamp}`;
+            
             console.log('📖 Loading content from API (Netlify Blobs)...');
-            const response = await fetch(CONTENT_URL, {
+            const response = await fetch(urlWithCacheBust, {
                 cache: 'no-store',
                 headers: {
-                    'Cache-Control': 'no-cache'
+                    'Cache-Control': 'no-cache',
+                    'Pragma': 'no-cache'
                 }
             });
 
             if (!response.ok) {
                 console.warn('⚠️ API not available, falling back to static file');
-                // Fallback to static file if API fails
-                const fallbackResponse = await fetch(FALLBACK_URL, { cache: 'no-store' });
+                // Fallback to static file if API fails (also with cache-busting)
+                const fallbackResponse = await fetch(`${FALLBACK_URL}?v=${timestamp}`, {
+                    cache: 'no-store',
+                    headers: {
+                        'Cache-Control': 'no-cache',
+                        'Pragma': 'no-cache'
+                    }
+                });
                 if (!fallbackResponse.ok) {
                     throw new Error(`Failed to load content (${fallbackResponse.status})`);
                 }
@@ -36,7 +47,7 @@
             // Don't overwrite window.translations - it's managed by translations.js
             // Just store the content separately
             
-            const preferredLanguage = localStorage.getItem('preferredLanguage') || 'fr';
+            const preferredLanguage = localStorage.getItem('preferredLanguage') || 'ua';
             applySiteContent(preferredLanguage);
 
             document.dispatchEvent(new CustomEvent('siteContentLoaded', {
@@ -49,9 +60,15 @@
             console.log('✅ Site content loaded from API (Netlify Blobs - instant updates enabled)');
         } catch (error) {
             console.error('❌ Error loading content:', error);
-            // Try fallback one more time
+            // Try fallback one more time (with cache-busting)
             try {
-                const fallbackResponse = await fetch(FALLBACK_URL, { cache: 'no-store' });
+                const fallbackResponse = await fetch(`${FALLBACK_URL}?v=${Date.now()}`, {
+                    cache: 'no-store',
+                    headers: {
+                        'Cache-Control': 'no-cache',
+                        'Pragma': 'no-cache'
+                    }
+                });
                 const payload = await fallbackResponse.json();
                 window.siteContent = payload;
                 applySiteContent(localStorage.getItem('preferredLanguage') || 'fr');
@@ -406,6 +423,93 @@
         const match = url.match(regExp);
         return (match && match[2].length === 11) ? match[2] : null;
     }
+    
+    function renderFooter(siteData) {
+        if (!siteData) return;
+        
+        // Render social links
+        const socialLinksContainer = document.querySelector('.social-links');
+        if (socialLinksContainer && siteData.social) {
+            const social = siteData.social;
+            const socialLinks = [];
+            
+            if (social.instagram) {
+                socialLinks.push(`<a href="${escapeHtml(social.instagram)}" target="_blank" rel="noopener" aria-label="Instagram" class="social-link">📷 Instagram</a>`);
+            }
+            if (social.youtube) {
+                socialLinks.push(`<a href="${escapeHtml(social.youtube)}" target="_blank" rel="noopener" aria-label="YouTube" class="social-link">📹 YouTube</a>`);
+            }
+            if (social.facebook) {
+                socialLinks.push(`<a href="${escapeHtml(social.facebook)}" target="_blank" rel="noopener" aria-label="Facebook" class="social-link">📘 Facebook</a>`);
+            }
+            if (social.tiktok) {
+                socialLinks.push(`<a href="${escapeHtml(social.tiktok)}" target="_blank" rel="noopener" aria-label="TikTok" class="social-link">🎵 TikTok</a>`);
+            }
+            if (social.linkedin) {
+                socialLinks.push(`<a href="${escapeHtml(social.linkedin)}" target="_blank" rel="noopener" aria-label="LinkedIn" class="social-link">💼 LinkedIn</a>`);
+            }
+            
+            if (socialLinks.length > 0) {
+                socialLinksContainer.innerHTML = socialLinks.join('');
+            }
+        }
+        
+        // Render contact info
+        if (siteData.contact) {
+            const contact = siteData.contact;
+            
+            // Update email
+            const emailElements = document.querySelectorAll('.contact-info .info-card:nth-child(2) p, .info-card:has(.info-icon:contains("📧")) p');
+            emailElements.forEach(el => {
+                if (contact.email && el.closest('.info-card')?.querySelector('.info-icon')?.textContent === '📧') {
+                    el.textContent = contact.email;
+                }
+            });
+            
+            // Update phone
+            const phoneElements = document.querySelectorAll('.contact-info .info-card:nth-child(3) p, .info-card:has(.info-icon:contains("📱")) p');
+            phoneElements.forEach(el => {
+                if (contact.phone && el.closest('.info-card')?.querySelector('.info-icon')?.textContent === '📱') {
+                    el.textContent = contact.phone;
+                }
+            });
+            
+            // Update address
+            const addressElements = document.querySelectorAll('.contact-info .info-card:nth-child(1) p, .info-card:has(.info-icon:contains("📍")) p');
+            addressElements.forEach(el => {
+                if (contact.address && el.closest('.info-card')?.querySelector('.info-icon')?.textContent === '📍') {
+                    el.textContent = contact.address;
+                }
+            });
+        }
+        
+        // Render legal links
+        const legalLinksContainer = document.querySelector('.footer-section:has(h4[data-i18n="footer.legal"]) .footer-links');
+        if (legalLinksContainer && siteData.legal) {
+            const legal = siteData.legal;
+            const legalLinks = [];
+            
+            if (legal.privacyUrl) {
+                legalLinks.push(`<li><a href="${escapeHtml(legal.privacyUrl)}" ${legal.privacyUrl.startsWith('http') ? 'target="_blank" rel="noopener"' : ''} data-i18n="footer.privacy">Politique de confidentialité</a></li>`);
+            } else {
+                legalLinks.push(`<li><a href="#" data-i18n="footer.privacy">Politique de confidentialité</a></li>`);
+            }
+            
+            if (legal.termsUrl) {
+                legalLinks.push(`<li><a href="${escapeHtml(legal.termsUrl)}" ${legal.termsUrl.startsWith('http') ? 'target="_blank" rel="noopener"' : ''} data-i18n="footer.terms">Conditions d'utilisation</a></li>`);
+            } else {
+                legalLinks.push(`<li><a href="#" data-i18n="footer.terms">Conditions d'utilisation</a></li>`);
+            }
+            
+            if (legal.cookiesUrl) {
+                legalLinks.push(`<li><a href="${escapeHtml(legal.cookiesUrl)}" ${legal.cookiesUrl.startsWith('http') ? 'target="_blank" rel="noopener"' : ''} data-i18n="footer.cookies">Cookies</a></li>`);
+            } else {
+                legalLinks.push(`<li><a href="#" data-i18n="footer.cookies">Cookies</a></li>`);
+            }
+            
+            legalLinksContainer.innerHTML = legalLinks.join('');
+        }
+    }
 
     function applySiteContent(lang) {
         const currentLang = lang || 'fr';
@@ -520,6 +624,9 @@
         renderPricing(content.pricing);
         renderEvents(content.events, currentLang);
         renderGallery(content.gallery);
+        
+        // Render footer with site settings (contact, social, legal)
+        renderFooter(payload.site);
 
         // Call changeLanguage to update data-i18n elements (nav, form labels, etc.)
         // but only for static UI elements that are not managed by Netlify Blobs

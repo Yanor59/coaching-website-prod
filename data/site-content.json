@@ -1,7 +1,25 @@
 {
   "site": {
     "name": "Alina Coaching",
-    "location": "Bratislava"
+    "location": "Bratislava",
+    "contact": {
+      "email": "alina@coaching-bratislava.com",
+      "phone": "+421 XXX XXX XXX",
+      "address": "Bratislava, Slovaquie",
+      "schedule": "Lun-Ven: 7h-20h<br>Sam: 9h-14h"
+    },
+    "social": {
+      "instagram": "",
+      "youtube": "",
+      "facebook": "",
+      "tiktok": "",
+      "linkedin": ""
+    },
+    "legal": {
+      "privacyUrl": "",
+      "termsUrl": "",
+      "cookiesUrl": ""
+    }
   },
   "languages": [
     "fr",
