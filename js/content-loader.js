@@ -93,6 +93,17 @@
         }
     }
 
+    // Normalize image path to absolute path (fix Mac display issue)
+    function normalizeImagePath(path) {
+        if (!path) return path;
+        // If already absolute (starts with http:// or https:// or /), return as is
+        if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('/')) {
+            return path;
+        }
+        // Convert relative path to absolute
+        return '/' + path;
+    }
+
     function renderAboutImage(section) {
         const aboutImage = document.querySelector('.about-image');
         if (!aboutImage || !section || !section.image) return;
@@ -111,7 +122,7 @@
 
             const img = document.createElement('img');
             img.className = 'about-real-image';
-            img.src = section.image.src;
+            img.src = normalizeImagePath(section.image.src);
             img.alt = section.image.alt || 'About image';
 
             Object.assign(img.style, {
@@ -163,7 +174,7 @@
             <div class="partner-card">
                 <div class="partner-image">
                     ${item.image
-                        ? `<img src="${item.image}" alt="${escapeHtml(item.name || 'Partner')}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px;">`
+                        ? `<img src="${normalizeImagePath(item.image)}" alt="${escapeHtml(item.name || 'Partner')}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px;">`
                         : `<div class="image-placeholder">👤</div>`}
                 </div>
                 <h4>${escapeHtml(item.name || '')}</h4>
@@ -398,7 +409,7 @@
             } else {
                 photoGrid.innerHTML = section.photos.map(photo => `
                     <div class="photo-card">
-                        <img src="${escapeHtml(photo.url)}" alt="${escapeHtml(photo.caption || 'Photo')}" class="gallery-photo">
+                        <img src="${escapeHtml(normalizeImagePath(photo.url))}" alt="${escapeHtml(photo.caption || 'Photo')}" class="gallery-photo">
                         ${photo.caption ? `<p class="photo-caption">${escapeHtml(photo.caption)}</p>` : ''}
                     </div>
                 `).join('');

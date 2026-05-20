@@ -231,22 +231,26 @@ function renderTestimonialsList(testimonials) {
                 
                 <div class="testimonial-actions">
                     ${testimonial.status !== 'approved' ? `
-                        <button class="btn-icon btn-approve" data-index="${index}" title="${t('testimonialsManager.actions.approve')}">
-                            ✅
+                        <button class="btn-action btn-approve" data-index="${index}">
+                            <span class="btn-icon">✅</span>
+                            <span class="btn-text">${t('testimonialsManager.actions.approve')}</span>
                         </button>
                     ` : ''}
                     ${testimonial.status !== 'rejected' ? `
-                        <button class="btn-icon btn-reject" data-index="${index}" title="${t('testimonialsManager.actions.reject')}">
-                            ❌
+                        <button class="btn-action btn-reject" data-index="${index}">
+                            <span class="btn-icon">❌</span>
+                            <span class="btn-text">${t('testimonialsManager.actions.reject')}</span>
                         </button>
                     ` : ''}
                     ${testimonial.status !== 'pending' ? `
-                        <button class="btn-icon btn-pending" data-index="${index}" title="${t('testimonialsManager.actions.pending')}">
-                            ⏳
+                        <button class="btn-action btn-pending" data-index="${index}">
+                            <span class="btn-icon">⏳</span>
+                            <span class="btn-text">${t('testimonialsManager.actions.pending')}</span>
                         </button>
                     ` : ''}
-                    <button class="btn-icon btn-edit" data-index="${index}" title="${t('common.edit')}">
-                        ✏️
+                    <button class="btn-action btn-edit" data-index="${index}">
+                        <span class="btn-icon">✏️</span>
+                        <span class="btn-text">${t('common.edit')}</span>
                     </button>
                     <button class="btn-icon btn-delete" data-index="${index}" title="${t('common.delete')}">
                         🗑️

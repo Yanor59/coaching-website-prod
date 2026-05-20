@@ -175,13 +175,27 @@ function renderSettingsManager() {
                         <label for="social-linkedin">
                             💼 LinkedIn
                         </label>
-                        <input 
-                            type="url" 
-                            id="social-linkedin" 
-                            class="form-control" 
+                        <input
+                            type="url"
+                            id="social-linkedin"
+                            class="form-control"
                             value="${escapeHtml(settingsData.social?.linkedin || '')}"
                             placeholder="https://linkedin.com/in/alinacoaching"
                         >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="social-telegram">
+                            ✈️ Telegram
+                        </label>
+                        <input
+                            type="url"
+                            id="social-telegram"
+                            class="form-control"
+                            value="${escapeHtml(settingsData.social?.telegram || '')}"
+                            placeholder="https://t.me/alinacoaching"
+                        >
+                        <small>${t('settingsManager.social.help') || 'URL complète de votre profil (laissez vide pour masquer)'}</small>
                     </div>
                     
                     <button type="submit" class="btn-primary">
@@ -357,7 +371,8 @@ async function handleSocialFormSubmit(e) {
             youtube: document.getElementById('social-youtube').value.trim(),
             facebook: document.getElementById('social-facebook').value.trim(),
             tiktok: document.getElementById('social-tiktok').value.trim(),
-            linkedin: document.getElementById('social-linkedin').value.trim()
+            linkedin: document.getElementById('social-linkedin').value.trim(),
+            telegram: document.getElementById('social-telegram').value.trim()
         };
         
         // Save to server
@@ -425,12 +440,10 @@ async function handleLegalFormSubmit(e) {
 
 // ===== ESCAPE HTML =====
 function escapeHtml(value) {
-    return String(value == null ? '' : value)
-        .replace(/&/g, '&')
-        .replace(/</g, '<')
-        .replace(/>/g, '>')
-        .replace(/"/g, '"')
-        .replace(/'/g, '&#039;');
+    if (value == null) return '';
+    const div = document.createElement('div');
+    div.textContent = String(value);
+    return div.innerHTML;
 }
 
 // Made with Bob

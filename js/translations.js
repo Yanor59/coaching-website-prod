@@ -668,6 +668,11 @@ function changeLanguage(lang) {
     const useBlobs = window.siteContent && window.siteContent.content && window.siteContent.content[lang];
     
     if (useBlobs) {
+        // Reload content from Netlify Blobs in the new language
+        if (typeof window.applySiteContent === 'function') {
+            window.applySiteContent(lang);
+        }
+        
         // Content is managed by content-loader.js from Netlify Blobs
         // Only update navigation and form labels (not content sections)
         document.querySelectorAll('[data-i18n]').forEach(element => {

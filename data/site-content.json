@@ -13,7 +13,8 @@
       "youtube": "",
       "facebook": "",
       "tiktok": "",
-      "linkedin": ""
+      "linkedin": "",
+      "telegram": ""
     },
     "legal": {
       "privacyUrl": "",
@@ -59,7 +60,7 @@
         "cert2": "",
         "cert3": "",
         "image": {
-          "src": "images/1776170707173-images.jpg",
+          "src": "/images/1776170707173-images.jpg",
           "alt": "Photo d'Alina",
           "placeholder": "Photo d'Alina"
         }
@@ -114,11 +115,11 @@
         ],
         "photos": [
           {
-            "url": "images/1776170803620-images.jpg",
+            "url": "/images/1776170803620-images.jpg",
             "caption": "photo1"
           },
           {
-            "url": "images/1234.jpg",
+            "url": "/images/1234.jpg",
             "caption": "photo2"
           }
         ]
@@ -349,11 +350,11 @@
         ],
         "photos": [
           {
-            "url": "images/1776170803620-images.jpg",
+            "url": "/images/1776170803620-images.jpg",
             "caption": "phoyto1"
           },
           {
-            "url": "images/1234.jpg",
+            "url": "/images/1234.jpg",
             "caption": "photo2"
           }
         ]
@@ -597,11 +598,11 @@
         ],
         "photos": [
           {
-            "url": "images/1776170803620-images.jpg",
+            "url": "/images/1776170803620-images.jpg",
             "caption": "phoyto1"
           },
           {
-            "url": "images/1234.jpg",
+            "url": "/images/1234.jpg",
             "caption": "photo2"
           }
         ]
@@ -832,11 +833,11 @@
         ],
         "photos": [
           {
-            "url": "images/1776170803620-images.jpg",
+            "url": "/images/1776170803620-images.jpg",
             "caption": "phoyto1"
           },
           {
-            "url": "images/1234.jpg",
+            "url": "/images/1234.jpg",
             "caption": "photo2"
           }
         ]

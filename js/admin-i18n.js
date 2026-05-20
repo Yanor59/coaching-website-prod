@@ -218,6 +218,44 @@ const adminTranslations = {
             }
         },
         
+        // Settings Manager
+        settingsManager: {
+            title: "Paramètres du Site",
+            subtitle: "Gérez les informations de contact, réseaux sociaux et liens légaux",
+            save: "Sauvegarder",
+            tabs: {
+                contact: "Contact",
+                social: "Réseaux Sociaux",
+                legal: "Liens Légaux"
+            },
+            contact: {
+                title: "Informations de Contact",
+                description: "Ces informations apparaissent dans la section Contact du site",
+                email: "Email",
+                emailHelp: "Email de contact principal",
+                phone: "Téléphone",
+                phoneHelp: "Numéro de téléphone / WhatsApp",
+                address: "Adresse",
+                addressHelp: "Ville et pays",
+                schedule: "Horaires",
+                scheduleHelp: "Horaires d'ouverture (utilisez Entrée pour les sauts de ligne)"
+            },
+            social: {
+                title: "Réseaux Sociaux",
+                description: "Liens vers vos profils de réseaux sociaux (apparaissent dans le footer)",
+                help: "URL complète de votre profil (laissez vide pour masquer)"
+            },
+            legal: {
+                title: "Liens Légaux",
+                description: "Liens vers vos pages légales (apparaissent dans le footer)",
+                info: "Vous pouvez créer des pages HTML séparées ou utiliser des liens externes (Google Docs, etc.)",
+                privacy: "Politique de Confidentialité",
+                privacyHelp: "Chemin relatif (privacy.html) ou URL complète",
+                terms: "Conditions d'Utilisation",
+                cookies: "Politique de Cookies"
+            }
+        },
+        
         // Notifications
         notifications: {
             contentLoaded: "✅ Contenu chargé",
@@ -474,6 +512,44 @@ const adminTranslations = {
                 youtubeUrl: "URL YouTube",
                 caption: "Підпис",
                 videoTitle: "Назва відео"
+            }
+        },
+        
+        // Settings Manager
+        settingsManager: {
+            title: "Налаштування Сайту",
+            subtitle: "Керуйте контактною інформацією, соціальними мережами та юридичними посиланнями",
+            save: "Зберегти",
+            tabs: {
+                contact: "Контакт",
+                social: "Соціальні Мережі",
+                legal: "Юридичні Посилання"
+            },
+            contact: {
+                title: "Контактна Інформація",
+                description: "Ця інформація відображається в розділі Контакт на сайті",
+                email: "Email",
+                emailHelp: "Основний контактний email",
+                phone: "Телефон",
+                phoneHelp: "Номер телефону / WhatsApp",
+                address: "Адреса",
+                addressHelp: "Місто та країна",
+                schedule: "Розклад",
+                scheduleHelp: "Години роботи (використовуйте Enter для переносу рядка)"
+            },
+            social: {
+                title: "Соціальні Мережі",
+                description: "Посилання на ваші профілі в соціальних мережах (відображаються у футері)",
+                help: "Повна URL вашого профілю (залиште порожнім, щоб приховати)"
+            },
+            legal: {
+                title: "Юридичні Посилання",
+                description: "Посилання на ваші юридичні сторінки (відображаються у футері)",
+                info: "Ви можете створити окремі HTML-сторінки або використовувати зовнішні посилання (Google Docs тощо)",
+                privacy: "Політика Конфіденційності",
+                privacyHelp: "Відносний шлях (privacy.html) або повна URL",
+                terms: "Умови Використання",
+                cookies: "Політика Cookies"
             }
         },
         

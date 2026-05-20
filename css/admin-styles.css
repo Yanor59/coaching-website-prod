@@ -347,6 +347,119 @@
 /* Boutons d'action spécifiques */
 .btn-approve:hover {
     background: rgba(16, 185, 129, 0.1);
+
+/* ===== BOUTONS D'ACTION AVEC TEXTE (Testimonials Moderation) ===== */
+.btn-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: var(--admin-radius);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: var(--admin-bg);
+    color: var(--admin-text-primary);
+    box-shadow: var(--admin-shadow-sm);
+}
+
+.btn-action:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--admin-shadow-md);
+}
+
+.btn-action:active {
+    transform: translateY(0);
+}
+
+.btn-action .btn-icon {
+    width: auto;
+    height: auto;
+    font-size: 1.125rem;
+    background: none;
+    border-radius: 0;
+}
+
+.btn-action .btn-text {
+    font-size: 0.875rem;
+}
+
+/* Bouton Approuver */
+.btn-action.btn-approve {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border: 2px solid transparent;
+}
+
+.btn-action.btn-approve:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+/* Bouton Rejeter */
+.btn-action.btn-reject {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+    border: 2px solid transparent;
+}
+
+.btn-action.btn-reject:hover {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+/* Bouton En attente */
+.btn-action.btn-pending {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+    border: 2px solid transparent;
+}
+
+.btn-action.btn-pending:hover {
+    background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+/* Bouton Éditer */
+.btn-action.btn-edit {
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    color: white;
+    border: 2px solid transparent;
+}
+
+.btn-action.btn-edit:hover {
+    background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+/* Actions container */
+.testimonial-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--admin-border);
+}
+
+/* Responsive: masquer le texte sur petits écrans */
+@media (max-width: 768px) {
+    .btn-action .btn-text {
+        display: none;
+    }
+    
+    .btn-action {
+        padding: 0.5rem;
+        min-width: 40px;
+        justify-content: center;
+    }
+    
+    .btn-action .btn-icon {
+        font-size: 1.25rem;
+    }
+}
     color: var(--admin-success);
 }
 
