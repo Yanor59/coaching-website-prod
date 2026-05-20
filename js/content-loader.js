@@ -4,6 +4,9 @@
     // Load from API (Netlify Blobs) for instant updates
     const CONTENT_URL = '/.netlify/functions/content';
     const FALLBACK_URL = 'data/site-content.json';
+    
+    // Flag to prevent infinite loop between applySiteContent and changeLanguage
+    let isApplyingContent = false;
 
     async function loadSiteContent() {
         try {
@@ -459,6 +462,9 @@
             if (social.linkedin) {
                 socialLinks.push(`<a href="${escapeHtml(social.linkedin)}" target="_blank" rel="noopener" aria-label="LinkedIn" class="social-link">💼 LinkedIn</a>`);
             }
+            if (social.telegram) {
+                socialLinks.push(`<a href="${escapeHtml(social.telegram)}" target="_blank" rel="noopener" aria-label="Telegram" class="social-link">✈️ Telegram</a>`);
+            }
             
             if (socialLinks.length > 0) {
                 socialLinksContainer.innerHTML = socialLinks.join('');
@@ -531,6 +537,12 @@
     }
 
     function applySiteContent(lang) {
+        // Prevent infinite loop with changeLanguage
+        if (isApplyingContent) {
+            return;
+        }
+        isApplyingContent = true;
+        
         const currentLang = lang || 'fr';
         const payload = window.siteContent;
         const content = payload && payload.content ? payload.content[currentLang] : null;
@@ -647,11 +659,10 @@
         // Render footer with site settings (contact, social, legal)
         renderFooter(payload.site);
 
-        // Call changeLanguage to update data-i18n elements (nav, form labels, etc.)
-        // but only for static UI elements that are not managed by Netlify Blobs
-        if (typeof window.changeLanguage === 'function') {
-            window.changeLanguage(currentLang);
-        }
+        // Don't call changeLanguage here - it creates an infinite loop
+        // changeLanguage will call applySiteContent, so we don't need to call it back
+        
+        isApplyingContent = false;
     }
 
     function escapeHtml(value) {
