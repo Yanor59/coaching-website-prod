@@ -47,10 +47,9 @@
             const payload = await response.json();
             window.siteContent = payload;
 
-            // Don't overwrite window.translations - it's managed by translations.js
-            // Just store the content separately
+            // Store content globally for access by other scripts
             
-            const preferredLanguage = localStorage.getItem('preferredLanguage') || 'ua';
+            const preferredLanguage = localStorage.getItem('preferredLanguage') || 'fr';
             applySiteContent(preferredLanguage);
 
             document.dispatchEvent(new CustomEvent('siteContentLoaded', {
