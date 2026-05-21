@@ -191,13 +191,32 @@
         const testimonialsSection = document.querySelector('.testimonials');
         const grid = document.querySelector('.testimonials-grid');
         
-        // Filter only approved testimonials
-        const approvedItems = section && Array.isArray(section.items)
-            ? section.items.filter(item => item.status === 'approved')
-            : [];
+        // Collect ALL approved testimonials from ALL languages
+        const payload = window.siteContent;
+        const allApprovedTestimonials = [];
+        
+        // Loop through all languages (fr, en, sk, ua)
+        ['fr', 'en', 'sk', 'ua'].forEach(lang => {
+            const langTestimonials = payload?.content?.[lang]?.testimonials;
+            if (langTestimonials && Array.isArray(langTestimonials.items)) {
+                const approved = langTestimonials.items.filter(item => item.status === 'approved');
+                allApprovedTestimonials.push(...approved);
+            }
+        });
+        
+        // Sort by date (most recent first) and take top 10
+        // Assuming testimonials have a 'date' or 'createdAt' field, or use array order
+        const sortedTestimonials = allApprovedTestimonials
+            .sort((a, b) => {
+                // If testimonials have a date field, use it
+                const dateA = a.date || a.createdAt || 0;
+                const dateB = b.date || b.createdAt || 0;
+                return new Date(dateB) - new Date(dateA);
+            })
+            .slice(0, 10); // Take only the 10 most recent
         
         // Hide section and menu links if no approved testimonials
-        if (approvedItems.length === 0) {
+        if (sortedTestimonials.length === 0) {
             if (testimonialsSection) {
                 testimonialsSection.style.display = 'none';
             }
@@ -219,7 +238,7 @@
         
         if (!grid) return;
 
-        grid.innerHTML = approvedItems.map(item => `
+        grid.innerHTML = sortedTestimonials.map(item => `
             <div class="testimonial-card">
                 <div class="testimonial-rating">${'⭐'.repeat(Number(item.rating || 5))}</div>
                 <p class="testimonial-text">"${escapeHtml(item.text || '')}"</p>
@@ -288,12 +307,29 @@
         const eventsSection = document.querySelector('.events');
         if (!grid || !eventsSection) return;
 
+        // Get current date (start of today) for comparison
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
         // Get events from current language
         let visibleItems = [];
         const currentLangEventIds = new Set();
         
         if (section && Array.isArray(section.items)) {
-            visibleItems = section.items.filter(item => item && item.enabled !== false);
+            visibleItems = section.items.filter(item => {
+                if (!item || item.enabled === false) return false;
+                
+                // Filter out past events if date is provided
+                if (item.date) {
+                    const eventDate = new Date(item.date);
+                    eventDate.setHours(0, 0, 0, 0);
+                    if (eventDate < today) {
+                        return false; // Event is in the past
+                    }
+                }
+                
+                return true;
+            });
             // Track IDs of events in current language
             visibleItems.forEach(item => {
                 if (item.id) currentLangEventIds.add(item.id);
@@ -309,10 +345,19 @@
             const langEvents = payload?.content?.[lang]?.events;
             if (langEvents && Array.isArray(langEvents.items)) {
                 const items = langEvents.items.filter(item => {
-                    // Include only if: enabled AND (no ID OR ID not in current language)
-                    return item &&
-                           item.enabled !== false &&
-                           (!item.id || !currentLangEventIds.has(item.id));
+                    if (!item || item.enabled === false) return false;
+                    
+                    // Filter out past events
+                    if (item.date) {
+                        const eventDate = new Date(item.date);
+                        eventDate.setHours(0, 0, 0, 0);
+                        if (eventDate < today) {
+                            return false; // Event is in the past
+                        }
+                    }
+                    
+                    // Include only if: no ID OR ID not in current language
+                    return !item.id || !currentLangEventIds.has(item.id);
                 });
                 
                 items.forEach(item => {
@@ -559,20 +604,21 @@
             applyText('.hero-description', content.hero.description || '');
             applyText('.hero .btn-primary', content.hero.cta || '');
             applyText('.hero .btn-secondary', content.hero.discover || '');
+            applyText('.hero-scroll span', content.hero.scroll || '');
         }
 
         // Apply About section content
         if (content.about) {
             applyText('.about .section-tag', content.about.tag || '');
             applyText('.about .section-title', content.about.title || '');
-            applyText('.about .section-subtitle', content.about.subtitle || '');
+            applyText('.about-text h3', content.about.subtitle || '');
             applyText('.badge-number', content.about.experienceValue || '5+');
-            applyText('.badge-label', content.about.experience || '');
+            applyText('.badge-text', content.about.experience || '');
             applyText('.about-text p:nth-of-type(1)', content.about.bio1 || '');
             applyText('.about-text p:nth-of-type(2)', content.about.bio2 || '');
-            applyText('.cert-item:nth-of-type(1)', content.about.cert1 || '');
-            applyText('.cert-item:nth-of-type(2)', content.about.cert2 || '');
-            applyText('.cert-item:nth-of-type(3)', content.about.cert3 || '');
+            applyText('.feature-item:nth-of-type(1) span:not(.feature-icon)', content.about.cert1 || '');
+            applyText('.feature-item:nth-of-type(2) span:not(.feature-icon)', content.about.cert2 || '');
+            applyText('.feature-item:nth-of-type(3) span:not(.feature-icon)', content.about.cert3 || '');
         }
 
         renderAboutImage(content.about);
@@ -583,26 +629,57 @@
             applyText('.services .section-title', content.services.title || '');
             applyText('.services .section-description', content.services.description || '');
             
+            // Popular badge
+            applyText('.service-card .featured-badge', content.services.popular || '');
+            
             // Individual service
             if (content.services.individual) {
                 applyText('.service-card:nth-of-type(1) h3', content.services.individual.title || '');
-                applyText('.service-card:nth-of-type(1) p', content.services.individual.desc || '');
+                applyText('.service-card:nth-of-type(1) > p', content.services.individual.desc || '');
                 applyText('.service-card:nth-of-type(1) .service-price', content.services.individual.price || '');
+                applyText('.service-card:nth-of-type(1) .service-features li:nth-of-type(1)', content.services.individual.feat1 || '');
+                applyText('.service-card:nth-of-type(1) .service-features li:nth-of-type(2)', content.services.individual.feat2 || '');
+                applyText('.service-card:nth-of-type(1) .service-features li:nth-of-type(3)', content.services.individual.feat3 || '');
+                applyText('.service-card:nth-of-type(1) .service-link', content.services.learn || '');
             }
             
             // Group service
             if (content.services.group) {
                 applyText('.service-card:nth-of-type(2) h3', content.services.group.title || '');
-                applyText('.service-card:nth-of-type(2) p', content.services.group.desc || '');
+                applyText('.service-card:nth-of-type(2) > p', content.services.group.desc || '');
                 applyText('.service-card:nth-of-type(2) .service-price', content.services.group.price || '');
+                applyText('.service-card:nth-of-type(2) .service-features li:nth-of-type(1)', content.services.group.feat1 || '');
+                applyText('.service-card:nth-of-type(2) .service-features li:nth-of-type(2)', content.services.group.feat2 || '');
+                applyText('.service-card:nth-of-type(2) .service-features li:nth-of-type(3)', content.services.group.feat3 || '');
+                applyText('.service-card:nth-of-type(2) .service-link', content.services.learn || '');
             }
             
             // Online service
             if (content.services.online) {
                 applyText('.service-card:nth-of-type(3) h3', content.services.online.title || '');
-                applyText('.service-card:nth-of-type(3) p', content.services.online.desc || '');
+                applyText('.service-card:nth-of-type(3) > p', content.services.online.desc || '');
                 applyText('.service-card:nth-of-type(3) .service-price', content.services.online.price || '');
+                applyText('.service-card:nth-of-type(3) .service-features li:nth-of-type(1)', content.services.online.feat1 || '');
+                applyText('.service-card:nth-of-type(3) .service-features li:nth-of-type(2)', content.services.online.feat2 || '');
+                applyText('.service-card:nth-of-type(3) .service-features li:nth-of-type(3)', content.services.online.feat3 || '');
+                applyText('.service-card:nth-of-type(3) .service-link', content.services.learn || '');
             }
+        }
+        
+        // Apply Events section headers
+        if (content.events) {
+            applyText('.events .section-tag', content.events.tag || '');
+            applyText('.events .section-title', content.events.title || '');
+            applyText('.events .section-description', content.events.description || '');
+        }
+        
+        // Apply Gallery section headers
+        if (content.gallery) {
+            applyText('.gallery .section-tag', content.gallery.tag || '');
+            applyText('.gallery .section-title', content.gallery.title || '');
+            applyText('.gallery .section-description', content.gallery.description || '');
+            applyText('.video-section h3', content.gallery.videos || '');
+            applyText('.photo-section h3', content.gallery.photos || '');
         }
         
         // Apply Partners section headers
@@ -630,14 +707,39 @@
             applyText('.contact .section-tag', content.contact.tag || '');
             applyText('.contact .section-title', content.contact.title || '');
             applyText('.contact .section-description', content.contact.description || '');
-            applyText('.contact-info .info-card:nth-child(1) h3', content.contact.locationLabel || '');
+            applyText('.contact-info .info-card:nth-child(1) h3', content.contact.location || '');
             applyText('.contact-info .info-card:nth-child(1) p', content.contact.locationValue || '');
-            applyText('.contact-info .info-card:nth-child(2) h3', content.contact.emailLabel || '');
+            applyText('.contact-info .info-card:nth-child(2) h3', content.contact.email || '');
             applyText('.contact-info .info-card:nth-child(2) p', content.contact.emailValue || '');
-            applyText('.contact-info .info-card:nth-child(3) h3', content.contact.phoneLabel || '');
+            applyText('.contact-info .info-card:nth-child(3) h3', content.contact.phone || '');
             applyText('.contact-info .info-card:nth-child(3) p', content.contact.phoneValue || '');
-            applyText('.contact-info .info-card:nth-child(4) h3', content.contact.scheduleLabel || '');
+            applyText('.contact-info .info-card:nth-child(4) h3', content.contact.hours || '');
             applyHTML('.contact-info .info-card:nth-child(4) p', content.contact.schedule || '');
+            
+            // Apply form labels
+            if (content.contact.form) {
+                const nameInput = document.querySelector('input[name="name"]');
+                const emailInput = document.querySelector('input[name="email"]');
+                const phoneInput = document.querySelector('input[name="phone"]');
+                const serviceSelect = document.querySelector('select[name="service"]');
+                const messageTextarea = document.querySelector('textarea[name="message"]');
+                const submitButton = document.querySelector('.contact-form button[type="submit"]');
+                
+                if (nameInput) nameInput.placeholder = content.contact.form.name || '';
+                if (emailInput) emailInput.placeholder = content.contact.form.email || '';
+                if (phoneInput) phoneInput.placeholder = content.contact.form.phone || '';
+                if (messageTextarea) messageTextarea.placeholder = content.contact.form.message || '';
+                if (submitButton) submitButton.textContent = content.contact.form.send || '';
+                
+                // Service select options
+                if (serviceSelect && content.contact.form) {
+                    const options = serviceSelect.querySelectorAll('option');
+                    if (options[0]) options[0].textContent = content.contact.form.select || '';
+                    if (options[1]) options[1].textContent = content.contact.form.individual || '';
+                    if (options[2]) options[2].textContent = content.contact.form.group || '';
+                    if (options[3]) options[3].textContent = content.contact.form.online || '';
+                }
+            }
         }
         
         // Apply Footer section
