@@ -678,8 +678,8 @@
             applyText('.gallery .section-tag', content.gallery.tag || '');
             applyText('.gallery .section-title', content.gallery.title || '');
             applyText('.gallery .section-description', content.gallery.description || '');
-            applyText('.video-section h3', content.gallery.videos || '');
-            applyText('.photo-section h3', content.gallery.photos || '');
+            applyText('.video-section h3', content.gallery.videosTitle || content.gallery.videos || '');
+            applyText('.photo-section h3', content.gallery.photosTitle || content.gallery.photos || '');
         }
         
         // Apply Partners section headers

@@ -191,6 +191,7 @@ if (contactForm) {
 }
 
 // ===== NEWSLETTER FORM =====
+// Note: Newsletter form removed from footer, but keeping handler in case it's re-added
 const newsletterForm = document.querySelector('.newsletter-form');
 
 if (newsletterForm) {
@@ -200,17 +201,29 @@ if (newsletterForm) {
         const emailInput = this.querySelector('input[type="email"]');
         const email = emailInput.value;
         
+        // Get current language
+        const lang = localStorage.getItem('preferredLanguage') || 'fr';
+        const t = getContactTranslations(lang);
+        
         // Validation email
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
-            showNotification('error', 'Veuillez entrer une adresse email valide.');
+            showNotification('error', t.invalidEmail);
             return;
         }
         
         // Simulation d'inscription
         console.log('Newsletter subscription:', email);
         
-        showNotification('success', 'Merci pour votre inscription !');
+        // Newsletter success messages
+        const newsletterSuccess = {
+            fr: 'Merci pour votre inscription !',
+            en: 'Thank you for subscribing!',
+            sk: 'Ďakujeme za prihlásenie!',
+            ua: 'Дякуємо за підписку!'
+        };
+        
+        showNotification('success', newsletterSuccess[lang] || newsletterSuccess.fr);
         emailInput.value = '';
     });
 }
