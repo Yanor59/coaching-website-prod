@@ -1,3 +1,38 @@
+// ===== TRANSLATIONS FOR NOTIFICATIONS =====
+function getContactTranslations(lang) {
+    const translations = {
+        fr: {
+            requiredFields: 'Veuillez remplir tous les champs obligatoires.',
+            invalidEmail: 'Veuillez entrer une adresse email valide.',
+            sending: 'Envoi en cours...',
+            success: 'Merci pour votre message ! Je vous répondrai dans les plus brefs délais.',
+            sendError: 'Impossible d\'envoyer le message pour le moment.'
+        },
+        en: {
+            requiredFields: 'Please fill in all required fields.',
+            invalidEmail: 'Please enter a valid email address.',
+            sending: 'Sending...',
+            success: 'Thank you for your message! I will reply as soon as possible.',
+            sendError: 'Unable to send message at the moment.'
+        },
+        sk: {
+            requiredFields: 'Prosím vyplňte všetky povinné polia.',
+            invalidEmail: 'Prosím zadajte platnú emailovú adresu.',
+            sending: 'Odosielanie...',
+            success: 'Ďakujeme za vašu správu! Odpoviem čo najskôr.',
+            sendError: 'Momentálne nie je možné odoslať správu.'
+        },
+        ua: {
+            requiredFields: 'Будь ласка, заповніть всі обов\'язкові поля.',
+            invalidEmail: 'Будь ласка, введіть дійсну адресу електронної пошти.',
+            sending: 'Надсилання...',
+            success: 'Дякуємо за ваше повідомлення! Я відповім якнайшвидше.',
+            sendError: 'Неможливо надіслати повідомлення зараз.'
+        }
+    };
+    return translations[lang] || translations.fr;
+}
+
 // ===== SMOOTH SCROLLING =====
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
@@ -105,23 +140,27 @@ if (contactForm) {
             language: localStorage.getItem('preferredLanguage') || 'fr'
         };
         
+        // Get translations
+        const lang = localStorage.getItem('preferredLanguage') || 'fr';
+        const t = getContactTranslations(lang);
+        
         // Validation basique
         if (!formData.name || !formData.email || !formData.message) {
-            showNotification('error', 'Veuillez remplir tous les champs obligatoires.');
+            showNotification('error', t.requiredFields);
             return;
         }
         
         // Validation email
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(formData.email)) {
-            showNotification('error', 'Veuillez entrer une adresse email valide.');
+            showNotification('error', t.invalidEmail);
             return;
         }
         
         // Afficher un loader
         const submitButton = contactForm.querySelector('button[type="submit"]');
         const originalText = submitButton.textContent;
-        submitButton.textContent = 'Envoi en cours...';
+        submitButton.textContent = t.sending;
         submitButton.disabled = true;
         
         try {
@@ -136,14 +175,14 @@ if (contactForm) {
             const result = await response.json();
 
             if (!response.ok) {
-                throw new Error(result.error || 'Erreur lors de l’envoi du message.');
+                throw new Error(result.error || t.sendError);
             }
 
-            showNotification('success', 'Merci pour votre message ! Je vous répondrai dans les plus brefs délais.');
+            showNotification('success', t.success);
             contactForm.reset();
         } catch (error) {
             console.error('Contact form error:', error);
-            showNotification('error', error.message || 'Impossible d’envoyer le message pour le moment.');
+            showNotification('error', error.message || t.sendError);
         } finally {
             submitButton.textContent = originalText;
             submitButton.disabled = false;
@@ -407,3 +446,29 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Made with Bob
+
+// ===== LEGAL LINKS LANGUAGE SWITCHER =====
+function updateLegalLinks() {
+    const lang = localStorage.getItem('preferredLanguage') || 'fr';
+    const legalLinks = document.querySelectorAll('.legal-link');
+    
+    legalLinks.forEach(link => {
+        const page = link.getAttribute('data-page');
+        if (page) {
+            link.href = `${page}-${lang}.html`;
+        }
+    });
+}
+
+// Update legal links when language changes
+document.addEventListener('DOMContentLoaded', () => {
+    updateLegalLinks();
+    
+    // Listen for language changes
+    const langButtons = document.querySelectorAll('.lang-btn');
+    langButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            setTimeout(updateLegalLinks, 100); // Small delay to ensure language is saved
+        });
+    });
+});

@@ -107,6 +107,9 @@
         "tag": "Galerie",
         "title": "Exemples & Vidéos",
         "description": "Découvrez mes entraînements et transformations",
+        "videosTitle": "Vidéos d'Entraînement",
+        "photosTitle": "Galerie Photos",
+        "photoPlaceholder": "Photo",
         "videos": [
           {
             "url": "https://www.youtube.com/watch?v=DiYTaQ-Mgck",
@@ -148,7 +151,16 @@
       "testimonials": {
         "tag": "Témoignages",
         "title": "Ce Que Disent Mes Clientes",
+        "submitButton": "Laissez votre témoignage",
         "clientLabel": "Cliente depuis",
+        "form": {
+          "name": "Votre nom",
+          "duration": "Cliente depuis",
+          "rating": "Note",
+          "text": "Votre témoignage",
+          "note": "Votre témoignage sera publié après modération",
+          "submit": "Envoyer"
+        },
         "items": [
           {
             "name": "Marie D.",
@@ -342,6 +354,9 @@
         "tag": "Gallery",
         "title": "Examples & Videos",
         "description": "Discover my workouts and transformations",
+        "videosTitle": "Training Videos",
+        "photosTitle": "Photo Gallery",
+        "photoPlaceholder": "Photo",
         "videos": [
           {
             "url": "https://www.youtube.com/watch?v=DiYTaQ-Mgck",
@@ -383,7 +398,16 @@
       "testimonials": {
         "tag": "Testimonials",
         "title": "What My Clients Say",
+        "submitButton": "Leave your testimonial",
         "clientLabel": "Client for",
+        "form": {
+          "name": "Your name",
+          "duration": "Client for",
+          "rating": "Rating",
+          "text": "Your testimonial",
+          "note": "Your testimonial will be published after moderation",
+          "submit": "Submit"
+        },
         "items": [
           {
             "name": "Marie D.",
@@ -590,6 +614,9 @@
         "tag": "Galéria",
         "title": "Príklady & Videá",
         "description": "Objavte moje tréningy a transformácie",
+        "videosTitle": "Tréningové Videá",
+        "photosTitle": "Fotogaléria",
+        "photoPlaceholder": "Fotka",
         "videos": [
           {
             "url": "https://www.youtube.com/watch?v=DiYTaQ-Mgck",
@@ -631,7 +658,16 @@
       "testimonials": {
         "tag": "Referencie",
         "title": "Čo Hovoria Moje Klientky",
+        "submitButton": "Zanechajte svoju referenciu",
         "clientLabel": "Klientka už",
+        "form": {
+          "name": "Vaše meno",
+          "duration": "Klientka už",
+          "rating": "Hodnotenie",
+          "text": "Vaša referencia",
+          "note": "Vaša referencia bude zverejnená po schválení",
+          "submit": "Odoslať"
+        },
         "items": [
           {
             "name": "Marie D.",
@@ -825,6 +861,9 @@
         "tag": "Галерея",
         "title": "Приклади та Відео",
         "description": "Відкрийте мої тренування та трансформації",
+        "videosTitle": "Тренувальні Відео",
+        "photosTitle": "Фотогалерея",
+        "photoPlaceholder": "Фото",
         "videos": [
           {
             "url": "https://www.youtube.com/watch?v=DiYTaQ-Mgck",
@@ -866,7 +905,16 @@
       "testimonials": {
         "tag": "Відгуки",
         "title": "Що Кажуть Мої Клієнтки",
+        "submitButton": "Залишити відгук",
         "clientLabel": "Клієнтка вже",
+        "form": {
+          "name": "Ваше ім'я",
+          "duration": "Клієнтка вже",
+          "rating": "Оцінка",
+          "text": "Ваш відгук",
+          "note": "Ваш відгук буде опубліковано після модерації",
+          "submit": "Надіслати"
+        },
         "items": [
           {
             "name": "Marie D.",
@@ -947,13 +995,13 @@
         "tag": "Контакт",
         "title": "Почніть Свою Трансформацію",
         "description": "Зв'яжіться зі мною для першої ознайомчої сесії",
-        "location": "Локація",
+        "location": "Місцезнаходження",
         "locationValue": "Bratislava, Slovakia",
         "email": "Електронна пошта",
         "emailValue": "alina@coaching-bratislava.com",
         "phone": "Телефон / WhatsApp",
         "phoneValue": "+421 XXX XXX XXX",
-        "hours": "Години",
+        "hours": "Графік роботи",
         "schedule": "Пн-Пт: 7:00-20:00<br>Сб: 9:00-14:00",
         "form": {
           "name": "Ім'я *",
